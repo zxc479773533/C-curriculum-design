@@ -150,7 +150,7 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
 }
 
 // Insert a car in the linklist
-void InListInsert_T(Linklist *L, Car CarInfo) {
+void ListInsert_T(Linklist *L, Car CarInfo) {
 
     // error code
     char error_info1[] = "You should enter lines before!";
@@ -216,5 +216,67 @@ void InListInsert_T(Linklist *L, Car CarInfo) {
     }
 
 }
+
+// Return a node that contains the line with ordered information
+FirstNode* LocateLine(Linklist *L, Line LineInfo) {
+
+    FirstNode *tail_L = L->head;
+    
+    while (strcmp(tail_L->LineInfo.number, LineInfo.number) && tail_L != NULL)
+        tail_L = tail_L->next;
+
+    return tail_L;
+}
+
+// Return a node that contains the station with ordered information
+SecondNode* LocateStation(Linklist *L, Station StationInfo) {
+
+    FirstNode *tail_L = L->head;
+
+    while (strcmp(tail_L->LineInfo.number, StationInfo.line_number) && tail_L != NULL)
+        tail_L = tail_L->next;
+    
+    if (tail_L == NULL)
+        return NULL;
+    
+    SecondNode *tail_S = tail_L->first_child;
+
+    while (strcmp(tail_S->StationInfo.number, StationInfo.number) && tail_S != NULL)
+        tail_S = tail_S->next;
+
+    return tail_S;
+}
+
+// Return a node that contains the car with ordered information
+ThirdNode* LocateCar(Linklist *L, Car CarInfo) {
+
+    FirstNode *tail_L = L->head;
+    
+    while (strcmp(tail_L->LineInfo.number, CarInfo.line_number) && tail_L != NULL)
+        tail_L = tail_L->next;
+
+    if (tail_L == NULL)
+        return NULL;
+
+    SecondNode *tail_S = tail_L->first_child;
+
+    while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) && tail_S != NULL)
+        tail_S = tail_S->next;
+
+    if (tail_S == NULL)
+        return NULL;
+
+    ThirdNode *tail_C = tail_S->first_child;
+
+    while (strcmp(tail_C->CarInfo.license_plate, CarInfo.license_plate) && tail_C != NULL)
+        tail_C = tail_C->next;
+
+    return tail_C;
+}
+
+
+
+
+
 
 #endif // !__LINKLIST_

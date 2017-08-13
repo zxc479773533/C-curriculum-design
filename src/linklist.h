@@ -47,7 +47,7 @@ typedef struct {
     float time_to_arrive; //kilometers
     float time_to_stay; //minutes
     // a linklist to hode the lines through self
-
+    // REMEMBER TO ADD!
 } Station;
 
 // goods information
@@ -95,6 +95,9 @@ typedef struct ThirdNode {
     struct ThirdNode *next;
 } ThirdNode;
 
+
+
+
 /* functions */
 
 extern void ListInitial(Linklist *L);
@@ -121,13 +124,40 @@ extern void ListInsert_S(Linklist *L, Station StationInfo);
 * Use: Insert a station in the linklist
 */
 
-extern void InListInsert_T(Linklist *L, Car CarInfo);
+extern void ListInsert_T(Linklist *L, Car CarInfo);
 /*
 * Function Name: ListInsert_T
 * Parameter: Linklist *L, Car CarInfo
 * Return: None
 * Use: Insert a car in the linklist
 */
+
+extern FirstNode* LocateLine(Linklist *L, Line LineInfo);
+/*
+* Function Name: LocateLine
+* Parameter: Linklist *L, char *name
+* Return: FirstNode*
+* Use: Return a node that contain the line with ordered information
+*/
+
+extern SecondNode* LocateStation(Linklist *L, Station StationInfo);
+/*
+* Function Name: LocateStation
+* Parameter: Linklist *L, Station StationInfo
+* Return: SecondNode*
+* Use: Return a node that contains the station with ordered information
+*/
+
+extern ThirdNode* LocateCar(Linklist *L, Car CarInfo);
+/*
+* Function Name: LocateCar
+* Parameter: Linklist *L, Car CarInfo
+* Return: ThirdNode*
+* Use: Return a node that contains the car with ordered information
+*/
+
+
+
 
 
 
