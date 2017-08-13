@@ -11,7 +11,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* distribution lines */
+/* defines */
+
+
+
+/* informatino struct definations */
+
+// distribution lines
 typedef struct {
     // initail
     char number[6];
@@ -29,7 +35,7 @@ typedef struct {
     char principal_email[50];
 } Line;
 
-/* stations in line */
+// stations in lines
 typedef struct {
     // initial
     char line_number[6];
@@ -42,9 +48,9 @@ typedef struct {
     float time_to_stay; //minutes
     // a linklist to hode the lines through self
 
-} station;
+} Station;
 
-/* goods information */
+// goods information
 typedef struct {
     float total_capacity; //gallon
     float unload; //gallon
@@ -52,7 +58,7 @@ typedef struct {
     float available_capacity; //gallon
 } GoodsInfo;
 
-/* cars to distribute goods */
+// cars to distribute goods
 typedef struct {
     // initial
     char license_plate[8];
@@ -62,5 +68,31 @@ typedef struct {
     // goods information
     GoodsInfo goods_list;
 } Car;
+
+/* linklist definations */
+
+typedef struct Linklist {
+    struct FirstNode *head;
+} Linklist;
+
+typedef struct FirstNode {
+    Line LineInfo;
+    struct SecondNode *first_child;
+    struct FirstNode *next;
+} FirstNode;
+
+typedef struct SecondNode {
+    Station StationInfo;
+    struct ThirdNode *first_child;
+    struct SecondNode *next;
+} SecondNode;
+
+typedef struct ThirdNode {
+    Car CarInfo;
+    struct ThirdNode *next;
+} ThirdNode;
+
+/* functions */
+
 
 #endif // !__LINKLIST_H_
