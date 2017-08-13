@@ -25,7 +25,7 @@ typedef struct {
     // changeable
     short stations;
     float length; //kilometers
-    float time; //minutes
+    float total_time; //minutes
     char start_station[10];
     char end_station[10];
     // about principle
@@ -52,10 +52,11 @@ typedef struct {
 
 // goods information
 typedef struct {
-    float total_capacity; //gallon
-    float unload; //gallon
-    float upload; //gallon
-    float available_capacity; //gallon
+    char  goods_name[8];
+    float total_capacity; //kilogram
+    float unload; //kilogram
+    float upload; //kilogram
+    float available_capacity; //kilogram
 } GoodsInfo;
 
 // cars to distribute goods
@@ -63,6 +64,7 @@ typedef struct {
     // initial
     char license_plate[8];
     char line_number[6];
+    char station_number[10];
     char driver_name[8];
     char driber_mobile[11];
     // goods information
@@ -72,6 +74,7 @@ typedef struct {
 /* linklist definations */
 
 typedef struct Linklist {
+    char error[100];
     struct FirstNode *head;
 } Linklist;
 
@@ -93,6 +96,39 @@ typedef struct ThirdNode {
 } ThirdNode;
 
 /* functions */
+
+extern void ListInitial(Linklist *L);
+/*
+* Function Name: ListInitial
+* Parameter: Linklist *L
+* Return: None
+* Use: initialize a NULL linklist
+*/
+
+extern void ListInsert_F(Linklist *L, Line LineInfo);
+/*
+* Function Name: ListInsert_F
+* Parameter: Linklist *L, Line LineInfo
+* Return: None
+* Use: Insert a line in the linklist
+*/
+
+extern void ListInsert_S(Linklist *L, Station StationInfo);
+/*
+* Function Name: ListInsert_S
+* Parameter: Linklist *L, Station StationInfo
+* Return: None
+* Use: Insert a station in the linklist
+*/
+
+extern void InListInsert_T(Linklist *L, Car CarInfo);
+/*
+* Function Name: ListInsert_T
+* Parameter: Linklist *L, Car CarInfo
+* Return: None
+* Use: Insert a car in the linklist
+*/
+
 
 
 #endif // !__LINKLIST_H_
