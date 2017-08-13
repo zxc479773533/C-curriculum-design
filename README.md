@@ -1,15 +1,5 @@
 # C-curriculum-design
 
-----------
-
-Hust C programming language curriculum design 2017 summer.
-
-Now restart the program, choosing a new method.
-
-So, let's start.
-
-----------
-
 ## About
 
 Project: Hust C programming language curriculum design 2017 summer.
@@ -23,6 +13,10 @@ Developing language: C
 Platform: Linux
 
 Dependencies: To be write...
+
+## Usage
+
+To be write
 
 ## Features
 
