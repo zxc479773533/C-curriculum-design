@@ -1,11 +1,11 @@
 /*
-* Module: Linklist APIs achieve
+* Module: Linklist basic APIs achieve
 * Author: zxc479773533@github.com
 * LICENSE: GNU GENERAL PUBLIC LICENSE V3.0
 */
 
-#ifndef __LINKLIST_
-#define __LINKLIST_
+#ifndef __BASIC_
+#define __BASIC_
 
 #include "linklist.h"
 
@@ -279,4 +279,4 @@ ThirdNode* LocateCar(Linklist *L, Car CarInfo) {
 
 
 
-#endif // !__LINKLIST_
+#endif // !__BASIC_
