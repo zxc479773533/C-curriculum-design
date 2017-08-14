@@ -1,5 +1,8 @@
 /*
-* Module: Linklist APIs head file
+* Part: Linklist algorithm library
+*
+* --Linklist APIs head file
+*
 * Author: zxc479773533@github.com
 * LICENSE: GNU GENERAL PUBLIC LICENSE V3.0
 */
