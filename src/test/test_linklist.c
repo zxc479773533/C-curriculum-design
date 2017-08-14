@@ -1,2 +1,2 @@
-#include "../linklist.c"
+#include "../linklist.h"
 
