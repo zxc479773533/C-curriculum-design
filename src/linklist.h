@@ -44,18 +44,15 @@ typedef struct {
     char line_number[6];
     int No;
     char number[10];
-    char name;
+    char name[10];
     float distance; //kilometers
     float distance_to_before; //kilometers
     float time_to_arrive; //kilometers
     float time_to_stay; //minutes
-    // a linklist to hode the lines through self
-    // REMEMBER TO ADD!
 } Station;
 
 // goods information
 typedef struct {
-    char  goods_name[8];
     float total_capacity; //kilogram
     float unload; //kilogram
     float upload; //kilogram
@@ -69,7 +66,7 @@ typedef struct {
     char line_number[6];
     char station_number[10];
     char driver_name[8];
-    char driber_mobile[11];
+    char driver_mobile[11];
     // goods information
     GoodsInfo goods_list;
 } Car;
@@ -165,6 +162,39 @@ extern ThirdNode* LocateCar(Linklist *L, Car CarInfo);
 * Return: ThirdNode*
 * Use: Return a node that contains the car with ordered information
 */
+
+
+extern void ModifyLine(Linklist *L, Line LineInfo);
+/*
+* Function Name: ModifyLine
+* Module: Basic
+* Parameter: Linklist *L, Line LineInfo
+* Return: None
+* Use: Modify a line's information
+*/
+
+extern void ModifyStation(Linklist *L, Station StationInfo);
+/*
+* Function Name: ModifyStation
+* Module: Basic
+* Parameter: Linklist *L, Station StationInfo
+* Return: None
+* Use: Modify a station's information
+*/
+
+extern void ModifyCar(Linklist *L, Car CarInfo);
+/*
+* Function Name: ModifyCar
+* Module: Basic
+* Parameter: Linklist *L, Car CarInfo
+* Return: None
+* Use: Modify a cat's information
+*/
+
+
+
+
+
 
 
 

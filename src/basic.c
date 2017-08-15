@@ -12,6 +12,7 @@
 
 // initialize a NULL linklist 
 void ListInitial(Linklist *L) {
+    strcpy(L->error, "");
     L->head = NULL;
 }
 
@@ -45,7 +46,7 @@ void set_car_capacity(FirstNode *line, Car CarInfo) {
 
         // traversal cars
         ThirdNode *car = station->first_child;
-        while (strcmp(car->CarInfo.license_plate, CarInfo.license_plate) && car != NULL)
+        while (strcmp(car->CarInfo.license_plate, CarInfo.license_plate) != 0 && car != NULL)
             car = car->next;
 
         // calculate
@@ -78,7 +79,7 @@ void ListInsert_F(Linklist *L, Line LineInfo) {
         tail_L->next->LineInfo = LineInfo;
         tail_L->next->next = NULL;
     }
-
+    strcpy(L->error, "");
 }
 
 // Insert a station in the linklist
@@ -96,7 +97,7 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
     // move to the line
     else {
         FirstNode *tail_L = L->head;
-        while (strcmp(tail_L->LineInfo.number, StationInfo.line_number) && tail_L != NULL)
+        while (strcmp(tail_L->LineInfo.number, StationInfo.line_number) != 0 && tail_L != NULL)
             tail_L = tail_L->next;
         if (tail_L == NULL)
             strcpy(L->error, error_info2);
@@ -144,6 +145,7 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
 
             }
             set_No_and_time(tail_L);
+            strcpy(L->error, "");
         }
 
     }
@@ -167,7 +169,7 @@ void ListInsert_T(Linklist *L, Car CarInfo) {
     // move to the line
     else {
         FirstNode *tail_L = L->head;
-        while (strcmp(tail_L->LineInfo.number, CarInfo.line_number) && tail_L != NULL)
+        while (strcmp(tail_L->LineInfo.number, CarInfo.line_number) != 0 && tail_L != NULL)
             tail_L = tail_L->next;
         if (tail_L == NULL)
             strcpy(L->error, error_info3);
@@ -183,7 +185,7 @@ void ListInsert_T(Linklist *L, Car CarInfo) {
             // move to the station
             else {
                 SecondNode *tail_S = tail_L->first_child;
-                while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) && tail_S != NULL)
+                while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) != 0 && tail_S != NULL)
                     tail_S = tail_S->next;
                 if (tail_S == NULL)
                     strcpy(L->error, error_info4);
@@ -208,6 +210,7 @@ void ListInsert_T(Linklist *L, Car CarInfo) {
                         tail_C->next->next = NULL;
                     }
                     set_car_capacity(tail_L, CarInfo);
+                    strcpy(L->error, "");
                 }
 
             }
@@ -223,7 +226,7 @@ FirstNode* LocateLine(Linklist *L, Line LineInfo) {
 
     FirstNode *tail_L = L->head;
     
-    while (strcmp(tail_L->LineInfo.number, LineInfo.number) && tail_L != NULL)
+    while (strcmp(tail_L->LineInfo.number, LineInfo.number) != 0 && tail_L != NULL)
         tail_L = tail_L->next;
 
     return tail_L;
@@ -234,7 +237,7 @@ SecondNode* LocateStation(Linklist *L, Station StationInfo) {
 
     FirstNode *tail_L = L->head;
 
-    while (strcmp(tail_L->LineInfo.number, StationInfo.line_number) && tail_L != NULL)
+    while (strcmp(tail_L->LineInfo.number, StationInfo.line_number) != 0 && tail_L != NULL)
         tail_L = tail_L->next;
     
     if (tail_L == NULL)
@@ -242,7 +245,7 @@ SecondNode* LocateStation(Linklist *L, Station StationInfo) {
     
     SecondNode *tail_S = tail_L->first_child;
 
-    while (strcmp(tail_S->StationInfo.number, StationInfo.number) && tail_S != NULL)
+    while (strcmp(tail_S->StationInfo.number, StationInfo.number) != 0 && tail_S != NULL)
         tail_S = tail_S->next;
 
     return tail_S;
@@ -253,7 +256,7 @@ ThirdNode* LocateCar(Linklist *L, Car CarInfo) {
 
     FirstNode *tail_L = L->head;
     
-    while (strcmp(tail_L->LineInfo.number, CarInfo.line_number) && tail_L != NULL)
+    while (strcmp(tail_L->LineInfo.number, CarInfo.line_number) != 0 && tail_L != NULL)
         tail_L = tail_L->next;
 
     if (tail_L == NULL)
@@ -261,7 +264,7 @@ ThirdNode* LocateCar(Linklist *L, Car CarInfo) {
 
     SecondNode *tail_S = tail_L->first_child;
 
-    while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) && tail_S != NULL)
+    while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) != 0 && tail_S != NULL)
         tail_S = tail_S->next;
 
     if (tail_S == NULL)
@@ -269,15 +272,118 @@ ThirdNode* LocateCar(Linklist *L, Car CarInfo) {
 
     ThirdNode *tail_C = tail_S->first_child;
 
-    while (strcmp(tail_C->CarInfo.license_plate, CarInfo.license_plate) && tail_C != NULL)
+    while (strcmp(tail_C->CarInfo.license_plate, CarInfo.license_plate) != 0 && tail_C != NULL)
         tail_C = tail_C->next;
 
     return tail_C;
 }
 
+// Modify a line's information
+void ModifyLine(Linklist *L, Line LineInfo) {
 
+    // error code
+    char error_info1[] = "This line is not exist!";
 
+    FirstNode *Line =  LocateLine(L, LineInfo);
+    if (Line == NULL)
+        strcpy(L->error, error_info1);
 
+    // find the line
+    else {
+        strcpy(Line->LineInfo.name,LineInfo.name);
+        strcpy(Line->LineInfo.principal_name,LineInfo.principal_name);
+        strcpy(Line->LineInfo.principal_tel,LineInfo.principal_tel);
+        strcpy(Line->LineInfo.principal_mobile,LineInfo.principal_mobile);
+        strcpy(Line->LineInfo.principal_email,LineInfo.principal_email);
+        strcpy(L->error, "");
+    }
+
+}
+
+// Modify a station's information
+void ModifyStation(Linklist *L, Station StationInfo) {
+
+    //error code
+    char error_info1[] = "This station is not exist!";
+
+    FirstNode *tail_L = L->head;
+    while (strcmp(tail_L->LineInfo.number, StationInfo.line_number) != 0 && tail_L != NULL)
+        tail_L = tail_L->next;
+
+    if (tail_L == NULL)
+        strcpy(L->error, error_info1);
+
+    // find the line
+    else {
+
+        SecondNode *tail_S = tail_L->first_child;
+        while (strcmp(tail_S->StationInfo.number, StationInfo.number) != 0 && tail_S != NULL)
+            tail_S = tail_S->next;
+
+        if (tail_S == NULL)
+            strcpy(L->error, error_info1);
+
+        // find the station
+        else  {
+            strcpy(tail_S->StationInfo.name, StationInfo.name);
+            tail_S->StationInfo.time_to_arrive = StationInfo.time_to_arrive;
+            tail_S->StationInfo.time_to_stay = StationInfo.time_to_stay;
+            set_No_and_time(tail_L);
+            strcpy(L->error, "");
+        }
+
+    }
+
+}
+
+// Modify a cat's information
+void ModifyCar(Linklist *L, Car CarInfo) {
+
+    // error code
+    char error_info1[] = "This car is not exist!";
+
+    FirstNode *tail_L = L->head;
+    while (strcmp(tail_L->LineInfo.number, CarInfo.line_number) != 0 && tail_L != NULL)
+        tail_L = tail_L->next;
+
+    if (tail_L == NULL)
+        strcpy(L->error, error_info1);
+
+    // find the line
+    else {
+
+        SecondNode *tail_S = tail_L->first_child;
+        while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) != 0 && tail_S != NULL)
+            tail_S = tail_S->next;
+
+        if (tail_S == NULL)
+            strcpy(L->error, error_info1);
+
+        // find the station
+        else {
+
+            ThirdNode *tail_C = tail_S->first_child;
+            while (strcmp(tail_C->CarInfo.license_plate, CarInfo.license_plate) != 0 && tail_C != NULL)
+                tail_C = tail_C->next;
+
+            if (tail_C == NULL)
+                strcpy(L->error, error_info1);
+
+            // find the car
+            else {
+                strcpy(tail_C->CarInfo.driver_name, CarInfo.driver_name);
+                strcpy(tail_C->CarInfo.driver_mobile, CarInfo.driver_mobile);
+                tail_C->CarInfo.goods_list.unload = CarInfo.goods_list.unload;
+                tail_C->CarInfo.goods_list.upload = CarInfo.goods_list.upload;
+                set_car_capacity(tail_L, CarInfo);
+                strcpy(L->error, "");
+            }
+
+        }
+
+    }
+
+}
 
 
 #endif // !__BASIC_
