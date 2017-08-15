@@ -1,0 +1,30 @@
+@charset "utf-8";
+/* CSS Document */
+
+#main {
+	margin: auto;
+	background: url(../images/background.jpg);
+	height: 663px;
+	width: 1024px;
+}
+
+.title {
+	padding-top: 20px;
+}
+
+.output {
+	float: left;
+	margin-top: 50px;
+	margin-left: 30px;
+	background: #C4C4C4;
+	height: 350px;
+	width: 450px;
+	border: 2px solid;
+}
+
+.control {
+	float: right;
+	margin-top: 30px;
+	height: 350px;
+	width: 450px;
+}

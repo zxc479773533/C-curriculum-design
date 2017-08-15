@@ -1,0 +1,28 @@
+@charset "utf-8";
+/* CSS Document */
+
+#main {
+	margin: auto;
+	background: url(../images/background.jpg);
+	height: 663px;
+	width: 1024px;
+}
+
+.title {
+	padding-top: 20px;
+}
+
+.middle {
+	height: 500px;
+}
+
+.bigimage {
+	float: left;
+	margin-top: 100px;
+}
+
+.login {
+	float: right;
+	margin-top: 80px;
+	margin-right: 80px;
+}
