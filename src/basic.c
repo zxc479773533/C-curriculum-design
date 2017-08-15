@@ -492,8 +492,8 @@ void DeleteLine(Linklist *L, Line LineInfo) {
 
         // delete line
         tail_L->next = tail_L->next->next;
-        
-
+        free(Line);
+        strcpy(L->error, "");
     }
 
 }
