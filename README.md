@@ -8,7 +8,9 @@ Name: Logistics Distribution Information Management System
 
 License: `GNU GENERAL PUBLIC LICENSE V3.0`
 
-Developing language: C
+Developing language: C, Javascript
+
+GUI: HTML page
 
 Platform: Linux
 
