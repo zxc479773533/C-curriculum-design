@@ -191,12 +191,32 @@ extern void ModifyCar(Linklist *L, Car CarInfo);
 * Use: Modify a cat's information
 */
 
+extern void DeleteCar(Linklist *L, Car CarInfo);
+/*
+* Function Name: DeleteCar
+* Module: Basic
+* Parameter: Linklist *L, Car CarInfo
+* Return: None
+* Use: Delete a car
+*/
 
+extern void DeleteStation(Linklist *L, Station StationInfo);
+/*
+* Function Name: DeleteStation
+* Module: Basic
+* Parameter: Linklist *L, Station StationInfo
+* Return: None
+* Use: Delete a station
+*/
 
-
-
-
-
+extern void DeleteLine(Linklist *L, Line LineInfo);
+/*
+* Function Name: DeleteLine
+* Module: Basic
+* Parameter: Linklist *L, Line LineInfo
+* Return: None
+* Use: Delete a line
+*/
 
 
 

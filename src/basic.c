@@ -385,5 +385,117 @@ void ModifyCar(Linklist *L, Car CarInfo) {
 
 }
 
+// Delete a car
+void DeleteCar(Linklist *L, Car CarInfo) {
+
+    // error code
+    char error_info1[] = "This car is not exist!";
+
+    ThirdNode *Car = LocateCar(L, CarInfo);
+    if (Car == NULL)
+        strcpy(L->error, error_info1);
+
+    else {
+
+        FirstNode *tail_L = L->head;
+        while (strcmp(tail_L->LineInfo.number, CarInfo.line_number) != 0)
+            tail_L = tail_L->next;
+
+        SecondNode *tail_S = tail_L->first_child;
+        while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) != 0);
+            tail_S = tail_S->next;
+
+        ThirdNode *tail_C = tail_S->first_child;
+        while (strcmp(tail_C->next->CarInfo.license_plate, CarInfo.license_plate) != 0)
+            tail_C = tail_C->next;
+
+        // delete car
+        tail_C->next = tail_C->next->next;
+        free(Car);
+        strcpy(L->error, "");
+    }
+
+}
+
+// Delete a Station
+void DeleteStation(Linklist *L, Station StationInfo) {
+
+    // error code
+    char error_info1[] = "This station is not exist!";
+
+    SecondNode *Station = LocateStation(L, StationInfo);
+    if (Station == NULL)
+        strcpy(L->error, error_info1);
+
+    else {
+
+        FirstNode *tail_L = L->head;
+        while (strcmp(tail_L->LineInfo.number, StationInfo.line_number) != 0)
+            tail_L = tail_L->next;
+
+        SecondNode *tail_S = tail_L->first_child;
+        while (strcmp(tail_S->next->StationInfo.number, StationInfo.number) != 0)
+            tail_S = tail_S->next;
+
+        // delete cars in the station
+        ThirdNode *tail_C = Station->first_child;
+        while (tail_C != NULL) {
+            ThirdNode *tmp = tail_C;
+            tail_C = tail_C->next;
+            free(tmp);
+        }
+
+        // delete station
+        tail_S->next = tail_S->next->next;
+        free(Station);
+        strcpy(L->error, "");
+    }
+
+}
+
+// Delete a line
+void DeleteLine(Linklist *L, Line LineInfo) {
+
+    // error code
+    char error_info1[] = "This line is not exist!";
+
+    FirstNode *Line = LocateLine(L, LineInfo);
+    if (Line == NULL)
+        strcpy(L->error, error_info1);
+
+    else {
+
+        FirstNode *tail_L = L->head;
+        while(strcmp(tail_L->next->LineInfo.number, LineInfo.number) != 0)
+            tail_L = tail_L->next;
+
+        // delete cars
+        SecondNode *tail_S = Line->first_child;
+        while (tail_S != NULL) {
+
+            ThirdNode *tail_C = tail_S->first_child;
+            while (tail_C != NULL) {
+                ThirdNode *tmp =  tail_C;
+                tail_C = tail_C->next;
+                free(tmp);
+            }
+            tail_S = tail_S->next;
+        }
+
+        // delete stations
+        tail_S = Line->first_child;
+        while (tail_S != NULL) {
+            SecondNode *tmp = tail_S;
+            tail_S = tail_S->next;
+            free(tmp);
+        }
+
+        // delete line
+        tail_L->next = tail_L->next->next;
+        
+
+    }
+
+}
 
 #endif // !__BASIC_
