@@ -22,16 +22,24 @@ void set_No_and_time(FirstNode *line) {
     // definations
     int count = 1;
     float total_time = 0;
-    SecondNode *station = line->first_child;
+    SecondNode *station = line->first_child, *pre = line->first_child;
 
+    // settle first station
+    strcpy(line->LineInfo.start_station, station->StationInfo.number);
+    station->StationInfo.No = count;
+    station = station->next;
+    count++;
     // traversal stations
     while (station != NULL) {
         station->StationInfo.No = count;
         total_time += station->StationInfo.time_to_arrive;
         total_time += station->StationInfo.time_to_stay;
+        station->StationInfo.distance_to_before = station->StationInfo.distance - pre->StationInfo.distance;
+        station = station->next;
+        pre = pre->next;
         count++;
     }
-
+    line->LineInfo.total_time = total_time;
 }
 
 // set available capacity of a car in a line
@@ -109,9 +117,6 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
             if (tail_L->first_child == NULL) {
                 tail_L->first_child = (SecondNode*)malloc(sizeof(SecondNode));
                 tail_L->first_child->StationInfo = StationInfo;
-                // set start and end station
-                strcpy(tail_L->LineInfo.start_station, StationInfo.number);
-                strcpy(tail_L->LineInfo.end_station, StationInfo.number);
                 tail_L->first_child->next = NULL;
             }
 
@@ -125,10 +130,6 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
                 if (tail_S->next == NULL) {
                     tail_S->next = (SecondNode*)malloc(sizeof(SecondNode));
                     tail_S->next->StationInfo = StationInfo;
-                    // set end station
-                    strcpy(tail_L->LineInfo.end_station, StationInfo.number);
-                    // set distance to before
-                    tail_S->next->StationInfo.distance_to_before = StationInfo.distance - tail_S->StationInfo.distance;
                     tail_S->next->next = NULL;
                 }
                 
@@ -137,9 +138,6 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
                     SecondNode *new_station = (SecondNode*)malloc(sizeof(SecondNode));
                     new_station->StationInfo = StationInfo;
                     new_station->next = tail_S->next;
-                    // set distance before
-                    new_station->StationInfo.distance_to_before = StationInfo.distance - tail_S->StationInfo.distance;
-                    tail_S->next->StationInfo.distance_to_before = tail_S->next->StationInfo.distance - StationInfo.distance;
                     tail_S->next = new_station;
                 }
 
@@ -446,8 +444,10 @@ void DeleteStation(Linklist *L, Station StationInfo) {
         }
 
         // delete station
+        tail_S->next->next->StationInfo.time_to_arrive += Station->StationInfo.time_to_arrive;
         tail_S->next = tail_S->next->next;
         free(Station);
+        set_No_and_time(tail_L);
         strcpy(L->error, "");
     }
 
