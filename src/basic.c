@@ -39,6 +39,8 @@ void set_No_and_time(FirstNode *line) {
         pre = pre->next;
         count++;
     }
+    strcpy(line->LineInfo.end_station, pre->StationInfo.number);
+    line->LineInfo.stations = count - 1;
     line->LineInfo.total_time = total_time;
 }
 
