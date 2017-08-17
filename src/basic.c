@@ -27,8 +27,11 @@ void set_No_and_time(FirstNode *line) {
     // settle first station
     strcpy(line->LineInfo.start_station, station->StationInfo.number);
     station->StationInfo.No = count;
+    total_time += station->StationInfo.time_to_arrive;
+    total_time += station->StationInfo.time_to_stay;
     station = station->next;
     count++;
+
     // traversal stations
     while (station != NULL) {
         station->StationInfo.No = count;
@@ -39,6 +42,7 @@ void set_No_and_time(FirstNode *line) {
         pre = pre->next;
         count++;
     }
+
     strcpy(line->LineInfo.end_station, pre->StationInfo.number);
     line->LineInfo.stations = count - 1;
     line->LineInfo.total_time = total_time;
@@ -56,7 +60,7 @@ void set_car_capacity(FirstNode *line, Car CarInfo) {
 
         // traversal cars
         ThirdNode *car = station->first_child;
-        while (strcmp(car->CarInfo.license_plate, CarInfo.license_plate) != 0 && car != NULL)
+        while (car != NULL && strcmp(car->CarInfo.license_plate, CarInfo.license_plate) != 0)
             car = car->next;
 
         // calculate
@@ -124,23 +128,37 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
 
             // insert
             else {
-                SecondNode *tail_S = tail_L->first_child;
-                while (tail_S->next != NULL && tail_S->StationInfo.distance < StationInfo.distance)
-                    tail_S = tail_S->next;
-
-                // if end
-                if (tail_S->next == NULL) {
-                    tail_S->next = (SecondNode*)malloc(sizeof(SecondNode));
-                    tail_S->next->StationInfo = StationInfo;
-                    tail_S->next->next = NULL;
-                }
                 
-                // if middle
+                // if insert at first
+                if (tail_L->first_child->StationInfo.distance > StationInfo.distance) {
+                    SecondNode *new_node = (SecondNode *)malloc(sizeof(SecondNode));
+                    new_node->StationInfo = StationInfo;
+                    new_node->next = tail_L->first_child;
+                    tail_L->first_child = new_node;
+                }
+
+                // find suitable position
                 else {
-                    SecondNode *new_station = (SecondNode*)malloc(sizeof(SecondNode));
-                    new_station->StationInfo = StationInfo;
-                    new_station->next = tail_S->next;
-                    tail_S->next = new_station;
+                    SecondNode *tail_S = tail_L->first_child;
+                    while (tail_S->next != NULL && tail_S->next->StationInfo.distance < StationInfo.distance)
+                        tail_S = tail_S->next;
+
+                    // if insert at end
+                    if (tail_L->next == NULL) {
+                        SecondNode *new_node = (SecondNode *)malloc(sizeof(SecondNode));
+                        new_node->StationInfo = StationInfo;
+                        new_node->next = NULL;
+                        tail_S->next = new_node;
+                    }
+
+                    // in insert in intermediate
+                    else {
+                        SecondNode *new_node = (SecondNode *)malloc(sizeof(SecondNode));
+                        new_node->StationInfo = StationInfo;
+                        new_node->next = tail_S->next;
+                        tail_S->next = new_node;
+                    }
+
                 }
 
             }
@@ -402,16 +420,23 @@ void DeleteCar(Linklist *L, Car CarInfo) {
             tail_L = tail_L->next;
 
         SecondNode *tail_S = tail_L->first_child;
-        while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) != 0);
+        while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) != 0)
             tail_S = tail_S->next;
 
         ThirdNode *tail_C = tail_S->first_child;
-        while (strcmp(tail_C->next->CarInfo.license_plate, CarInfo.license_plate) != 0)
-            tail_C = tail_C->next;
 
-        // delete car
-        tail_C->next = tail_C->next->next;
-        free(Car);
+        // if the car to be delete is the only car
+        if (tail_C->next == NULL) {
+            tail_S->first_child = NULL;
+            free(Car);
+        }
+
+        else {
+            while (strcmp(tail_C->next->CarInfo.license_plate, CarInfo.license_plate) != 0)
+                tail_C = tail_C->next;
+            tail_C->next = tail_C->next->next;
+            free(Car);
+        }
         strcpy(L->error, "");
     }
 
@@ -433,10 +458,6 @@ void DeleteStation(Linklist *L, Station StationInfo) {
         while (strcmp(tail_L->LineInfo.number, StationInfo.line_number) != 0)
             tail_L = tail_L->next;
 
-        SecondNode *tail_S = tail_L->first_child;
-        while (strcmp(tail_S->next->StationInfo.number, StationInfo.number) != 0)
-            tail_S = tail_S->next;
-
         // delete cars in the station
         ThirdNode *tail_C = Station->first_child;
         while (tail_C != NULL) {
@@ -445,10 +466,21 @@ void DeleteStation(Linklist *L, Station StationInfo) {
             free(tmp);
         }
 
-        // delete station
-        tail_S->next->next->StationInfo.time_to_arrive += Station->StationInfo.time_to_arrive;
-        tail_S->next = tail_S->next->next;
-        free(Station);
+        SecondNode *tail_S = tail_L->first_child;
+
+        // if the station to be delete is the only station
+        if (tail_S->next == NULL) {
+            tail_L->first_child = NULL;
+            free(Station);
+        }
+
+        else {
+            while (strcmp(tail_S->next->StationInfo.number, StationInfo.number) != 0)
+                tail_S = tail_S->next;
+            tail_S->next->next->StationInfo.time_to_arrive += Station->StationInfo.time_to_arrive;
+            tail_S->next = tail_S->next->next;
+            free(Station);
+        }
         set_No_and_time(tail_L);
         strcpy(L->error, "");
     }
@@ -466,10 +498,6 @@ void DeleteLine(Linklist *L, Line LineInfo) {
         strcpy(L->error, error_info1);
 
     else {
-
-        FirstNode *tail_L = L->head;
-        while(strcmp(tail_L->next->LineInfo.number, LineInfo.number) != 0)
-            tail_L = tail_L->next;
 
         // delete cars
         SecondNode *tail_S = Line->first_child;
@@ -492,9 +520,20 @@ void DeleteLine(Linklist *L, Line LineInfo) {
             free(tmp);
         }
 
-        // delete line
-        tail_L->next = tail_L->next->next;
-        free(Line);
+        FirstNode *tail_L = L->head;
+
+        // if the line to be delete is the only line
+        if (tail_L->next == NULL) {
+            L->head = NULL;
+            free(Line);
+        }
+
+        else {
+            while(strcmp(tail_L->next->LineInfo.number, LineInfo.number) != 0)
+                tail_L = tail_L->next;
+            tail_L->next = tail_L->next->next;
+            free(Line);
+        }
         strcpy(L->error, "");
     }
 

@@ -74,7 +74,7 @@ typedef struct {
 /* linklist definations */
 
 typedef struct Linklist {
-    char error[100];
+    char error[50];
     struct FirstNode *head;
 } Linklist;
 
