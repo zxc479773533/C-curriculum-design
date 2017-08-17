@@ -12,12 +12,12 @@ var myForm = [];
 myForm.push({
     value: 'ImputLine',
     compulsoryArg: [
-        'Number',
-        'Name',
-        'Principal\'s name',
-        'Principal\'s tel',
-        'Principal\'s mobile',
-        'Principal\'s email'
+        'number',
+        'name',
+        'principal_name',
+        'principal_tel',
+        'principal_mobile',
+        'principal_email'
     ],
     optionalArg: [],
 });
@@ -25,12 +25,12 @@ myForm.push({
 myForm.push({
     value: 'ImputStation',
     compulsoryArg: [
-        'Line number',
-        'Number',
-        'Name',
-        'Distance',
-        'Time to arrive',
-        'Time to stay'
+        'line_number',
+        'number',
+        'name',
+        'distance',
+        'time_to_arrive',
+        'time_to_stay'
     ],
     optionalArg: [],
 });
@@ -38,14 +38,14 @@ myForm.push({
 myForm.push({
     value: 'ImputCar',
     compulsoryArg: [
-        'License plate',
-        'Line number',
-        'Station number',
-        'Driver\'s name',
-        'Driver\'s modile',
-        'Car\'s total capacity',
-        'Goods unload',
-        'Goods upload'
+        'license_plate',
+        'line_number',
+        'station_number',
+        'driver_name',
+        'driver_mobile',
+        'total_capacity',
+        'unload',
+        'upload'
     ],
     optionalArg: [],
 });
@@ -53,51 +53,52 @@ myForm.push({
 myForm.push({
     value: 'ModifyLine',
     compulsoryArg: [
-        'Number'
+        'number'
     ],
     optionalArg: [
-        'Name',
-        'Principal\'s name',
-        'Principal\'s tel',
-        'Principal\'s mobile',
-        'Principal\'s email'
+        'name',
+        'principal_name',
+        'principal_tel',
+        'principal_mobile',
+        'principal_email'
     ],
 });
 
 myForm.push({
     value: 'ModifyStation',
     compulsoryArg: [
-        'Line number',
-        'Number'
+        'line_number',
+        'number'
     ],
     optionalArg: [
-        'Name',
-        'Distance',
-        'Time to arrive',
-        'Time to stay'
+        'name',
+        'distance',
+        'distance_to_before',
+        'time_to_arrive',
+        'time_to_stay'
     ],
 });
 
 myForm.push({
     value: 'ModifyCar',
     compulsoryArg: [
-        'License plate',
-        'Line number',
-        'Station number'
+        'license_plate',
+        'line_number',
+        'station_number'
     ],
     optionalArg: [
-        'Driver\'s name',
-        'Driver\'s modile',
-        'Car\'s total capacity',
-        'Goods unload',
-        'Goods upload'
+        'driver_name',
+        'driver_mobile',
+        'available_capacity',
+        'unload',
+        'upload'
     ],
 });
 
 myForm.push({
     value: 'DeleteLine',
     compulsoryArg: [
-        'Number'
+        'number'
     ],
     optionalArg: [],
 });
@@ -105,8 +106,8 @@ myForm.push({
 myForm.push({
     value: 'DeleteStation',
     compulsoryArg: [
-        'Line number',
-        'Number'
+        'line_number',
+        'number'
     ],
     optionalArg: [],
 });
@@ -114,9 +115,9 @@ myForm.push({
 myForm.push({
     value: 'DeleteCar',
     compulsoryArg: [
-        'Line number',
-        'Station number',
-        'License plate'
+        'line_number',
+        'station_number',
+        'license_plate'
     ],
     optionalArg: [],
 });
@@ -133,11 +134,34 @@ myForm.push({
     optionalArg: [],
 });
 
+// translate C Identifier to Chinese
+function translateToChinese (arg) {
+    switch (arg) {
+        case 'number': return '编号'; break;
+        case 'name': return '名称'; break;
+        case 'principal_name': return '负责人姓名'; break;
+        case 'principal_tel': return '负责人办公室电话'; break;
+        case 'principal_mobile': return '负责人移动电话'; break;
+        case 'principal_email': return '负责人邮箱'; break;
+        case 'line_number': return '所在路线编号'; break;
+        case 'distance': return '与起点的距离'; break;
+        case 'time_to_arrive': return '与上一个站点交通耗时'; break;
+        case 'time_to_stay': return '停留耗时'; break;
+        case 'license_plate': return '车牌号'; break;
+        case 'station_number': return '所在站点编号'; break;
+        case 'driver_name': return '司机姓名'; break;
+        case 'driver_mobile': return '司机移动电话'; break;
+        case 'total_capacity': return '汽车总容量(单位：kg)'; break;
+        case 'unload': return '在该站的卸货量(单位：kg)'; break;
+        case 'upload': return '在该站的装载量(单位：kg)'; break;
+    }
+}
+
 // create arguments
 function createArguments(arg, op) {
 
     var li = new String('<li><label class="argName">');
-    li += arg;
+    li += translateToChinese(arg);
 
     // creat * for compusory
     if (op) {
@@ -145,7 +169,7 @@ function createArguments(arg, op) {
     }
 
     li += '</label><br/>';
-    li += '<input type="text" class="inputZone" id="arg_' + arg;
+    li += '<input type="text" class="inputZone" id="' + arg;
     li += '"/></li>';
     return li;
 }
@@ -153,8 +177,20 @@ function createArguments(arg, op) {
 // create button
 function createButton(mode) {
 
+    // build button
     var button = new String('<br/><li><input id="submit" type="submit" value="提交" onclick=\'');
-    button += '\'/></li>';
+    button += 'mainSend("' + mode.value + '"';
+
+    // build compulsory arguments
+    mode.compulsoryArg.forEach(function (arg) {
+        button += ', document.getElementById("' + arg + '").value';
+    });
+
+    // build optional arguments
+    mode.optionalArg.forEach(function (arg) {
+        button += ', document.getElementById("' + arg + '").value';
+    });
+    button += ')\'/></li>';
     return button;
 }
 

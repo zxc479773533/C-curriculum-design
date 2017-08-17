@@ -15,7 +15,7 @@ ws.onopen = function () {
 
 // event when client receive a message
 ws.onmessage = function (evt) {
-    main(evt.data);
+    mainReceive(evt.data);
 }
 
 // event when error happens
@@ -30,7 +30,19 @@ ws.onclose = function () {
     console.log('Connection closed.');
 }
 
-function main (data) {
+function mainReceive (data) {
     data = data.replace('\n', '<br/>');
     document.getElementById('console').innerHTML += data;
+}
+
+function mainSend () {
+    var buffer = '';
+    for (let arg of arguments) {
+        if (arguments == '') {
+            buffer += ' #';
+        }
+        else {
+            buffer += ' ' + arg;
+        }
+    }
 }
