@@ -26,21 +26,27 @@
 		<div class="control">
 			<label>
 				<h2>模式选择:</h2>
-				<select id="choice">
-					<option value>请选择您需要的操作</option>
-					<option value="">录入配送路线信息</option>
-					<option value="">录入站点信息</option>
-					<option value="">录入车辆信息</option>
-					<option value="">修改配送路线信息</option>
-					<option value="">修改站点信息</option>
-					<option value="">修改车辆信息</option>
-					<option value="">删除配送路线</option>
-					<option value="">删除站点</option>
-					<option value="">删除车辆</option>
-					<option value="">统计计算</option>
-					<option value="">查询业务</option>
-				</select>
 			</label>
+			<script>
+				function makeForm(val) {
+					document.getElementById('mainForm').innerHTML = makeFormHTML(val);
+				}
+			</script>
+			<select id="choices" onchange="makeForm(getElementById('choices').value)">
+				<option value>请选择您需要的操作</option>
+				<option value="ImputLine">录入配送路线信息</option>
+				<option value="ImputStation">录入站点信息</option>
+				<option value="ImputCar">录入车辆信息</option>
+				<option value="ModifyLine">修改配送路线信息</option>
+				<option value="ModifyStation">修改站点信息</option>
+				<option value="ModifyCar">修改车辆信息</option>
+				<option value="DeleteLine">删除配送路线</option>
+				<option value="DeleteStation">删除站点</option>
+				<option value="DeleteCar">删除车辆</option>
+				<option value="Statistics">统计计算</option>
+				<option value="Inquire">查询业务</option>
+			</select>
+			<form id="mainForm" onsubmit="return false;"></form>
 		</div>
 	</div>
 </body>

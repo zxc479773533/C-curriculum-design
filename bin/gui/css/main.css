@@ -28,3 +28,23 @@
 	height: 350px;
 	width: 450px;
 }
+
+.compusory {
+	color: red;
+}
+
+ul {
+	list-style-type: none;
+}
+
+.argName {
+	font-family: Sans-serif;
+}
+
+#submit {
+	height: 35px;
+	width: 70px;
+	font-size: 14px;
+	background-color: royalblue;
+	color: white;
+}
