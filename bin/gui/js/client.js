@@ -45,4 +45,5 @@ function mainSend () {
             buffer += ' ' + arg;
         }
     }
+    ws.send(buffer);
 }
