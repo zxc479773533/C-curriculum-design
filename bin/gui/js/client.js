@@ -5,7 +5,7 @@
 * LICENSE: GNU GENERAL PUBLIC LICENSE V3.0
 */
 
-// websocket object
+// creat websocket
 var ws = new WebSocket('ws://localhost:8080');
 
 // event when the websocket is opened
@@ -30,13 +30,21 @@ ws.onclose = function () {
     console.log('Connection closed.');
 }
 
+// receive data from server
 function mainReceive (data) {
+    
     data = data.replace('\n', '<br/>');
+
+    /*TO BE WRITE*/
+
     document.getElementById('console').innerHTML += data;
 }
 
+// send request to server
 function mainSend () {
+    
     var buffer = '';
+    
     for (let arg of arguments) {
         if (arguments == '') {
             buffer += ' #';

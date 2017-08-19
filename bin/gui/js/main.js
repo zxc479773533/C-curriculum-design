@@ -190,6 +190,7 @@ function createButton(mode) {
     mode.optionalArg.forEach(function (arg) {
         button += ', document.getElementById("' + arg + '").value';
     });
+
     button += ')\'/></li>';
     return button;
 }
