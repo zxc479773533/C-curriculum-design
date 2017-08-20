@@ -9,7 +9,7 @@
 var ws = new WebSocket('ws://localhost:8080');
 
 // event when the websocket is opened
-ws.onopen = function () {
+ws.onopen = function (evt) {
     console.log('Connected to server.');
 }
 
@@ -19,20 +19,20 @@ ws.onmessage = function (evt) {
 }
 
 // event when error happens
-ws.onerror = function () {
+ws.onerror = function (evt) {
     alert('There is something wrong with your network, please check your server.')
     console.log('Error occured.')
 }
 
 // event when the websocket is closed
-ws.onclose = function () {
+ws.onclose = function (evt) {
     alert('Connection closed.');
     console.log('Connection closed.');
 }
 
 // receive data from server
 function mainReceive (data) {
-    
+    console.log(data);
     data = data.replace('\n', '<br/>');
 
     /*TO BE WRITE*/
@@ -53,5 +53,6 @@ function mainSend () {
             buffer += ' ' + arg;
         }
     }
+    console.log(buffer);
     ws.send(buffer);
 }
