@@ -45,6 +45,34 @@
 
 /* struct definations */
 
+/*-------------------------------------------------------------------
+0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-------+-+-------------+-------------------------------+
+|F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+|I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
+|N|V|V|V|       |S|             |   (if payload len==126/127)   |
+| |1|2|3|       |K|             |                               |
++-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+|     Extended payload length continued, if payload len == 127  |
++ - - - - - - - - - - - - - - - +-------------------------------+
+|                               |Masking-key, if MASK set to 1  |
++-------------------------------+-------------------------------+
+| Masking-key (continued)       |          Payload Data         |
++-------------------------------- - - - - - - - - - - - - - - - +
+:                     Payload Data continued ...                :
++ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+|                     Payload Data continued ...                |
++---------------------------------------------------------------+
+--------------------------------------------------------------------*/
+
+typedef struct {
+    u_char fin;
+    u_char opencode;
+    u_char mask;
+    u_long payload_length;
+    u_char masking_key[4];
+} websocket_head;
 
 
 /* functions */
@@ -76,13 +104,31 @@ extern int shakehands(int sock_client);
 * Use: shakehands with client and build connection
 */
 
-extern void DecodeMessage(char *data, int len, char *mask);
+extern void strreverse(char *str, int len);
 /*
-* Function Name: shakehands
+* Function Name: strreverse
 * Module: Server
-* Parameter: int sock_client
+* Parameter: char *str, int len
+* Return: None
+* Use: reverse string
+*/ 
+
+extern int receive_and_parse(int sock, websocket_head *pWS);
+/*
+* Function Name: receive_and_parse
+* Module: Server
+* Parameter: int sock, websocket_head *pWS
 * Return: int
-* Use: shakehands with client and build connection
+* Use: receive message from client and parse it
+*/ 
+
+extern void DecodeMessage(char *data, int len, u_char *mask);
+/*
+* Function Name: DecodeMessage
+* Module: Server
+* Parameter: char *data, int len, u_char *mask
+* Return: None
+* Use: decode message
 */ 
 
 

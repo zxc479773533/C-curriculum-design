@@ -12,9 +12,11 @@ Developing language: C, Javascript
 
 GUI: HTML page
 
+Communication protocol: websocket
+
 Platform: Linux
 
-Dependencies: To be write...
+Dependencies: openssl
 
 ## Usage
 

@@ -7,6 +7,7 @@
 
 #include "wsserver.h"
 
+// Base64 encode function, used to build connection
 int base64_encode(char *in_str, int in_len, char *out_str) {
 
     BIO *b64, *bio;
@@ -32,6 +33,7 @@ int base64_encode(char *in_str, int in_len, char *out_str) {
     return size;
 }
 
+// read a line string form buffer
 int readline(char *buff, int pos, char *line) {
 
     int len = strlen(buff);
@@ -44,6 +46,7 @@ int readline(char *buff, int pos, char *line) {
     return -1;
 }
 
+// shakehands with client and build connection
 int shakehands(int sock_client) {
 
     // definations
@@ -95,10 +98,63 @@ int shakehands(int sock_client) {
     return 0;
 }
 
-void DecodeMessage(char *data, int len, char *mask) {
+// reverse string
+void strreverse(char *str, int len) {
+    int i;
+    char tmp;
+    for (i = 0; i< len/2; i++) {
+        tmp = *(str + i);
+        *(str + i) = *(str + len - i - 1);
+        *(str + len - i - 1) = tmp;
+    }
+}
 
+// receive message from client and parse it
+int receive_and_parse(int fd, websocket_head *pWS) {
 
+    char tmp;
 
+    // get fin and opencode
+    if (read(fd, &tmp, 1) <= 0)
+        return -1;
+    pWS->fin = ((tmp & 0x80) == 0x80);
+    pWS->opencode = (tmp & 0x0F);
+
+    // get mask and plyload length
+    if (read(fd, &tmp, 1) <= 0)
+        return -1;
+    pWS->mask = ((tmp & 0x80) == 0X80);
+    pWS->payload_length = (tmp & 0x7F);
+
+    // the next two bytes is true payload length
+    if (pWS->payload_length == 126) {
+        char extern_len[2];
+        if (read(fd, extern_len, 2) <= 0)
+            return -1;
+        pWS->payload_length = (extern_len[0] & 0xff) << 8 | (extern_len[1] & 0xff);
+    }
+
+    // the next eight bytes is the true payload length
+    else if (pWS->payload_length == 127) {
+        char extern_len[8];
+        if (read(fd, &extern_len, 8) <= 0)
+            return -1;
+        strreverse(extern_len, 8);
+        memcpy(&(pWS->payload_length), extern_len, 8);
+    }
+
+    // get masking key
+    if (read(fd, pWS->masking_key, 4) <= 0)
+        return -1;
+    
+    return 0;
+}
+
+// decode message
+void DecodeMessage(char *data, int len, u_char *mask) {
+    int i;
+    for (i = 0; i < len; i++)
+        *(data + i) ^=*(mask + (i % 4));
 }
 
 int main(void) {
@@ -154,12 +210,24 @@ int main(void) {
     // main
     while (1) {
 
-        bzero(&buff, sizeof(buff));
-        read(connect, buff, sizeof(buff));
-        if (strlen(buff) == 0)
-            continue;
-        printf("data : %d\n", ++count);
-        printf("%s\n", buff);
+        websocket_head head;
+        char payload[BUFF_SIZE];
+        int size = 0;
+
+        int Ecode = receive_and_parse(connect, &head);
+        if (Ecode < 0)
+            break;
+
+        while (size < head.payload_length) {
+            int readSize = read(connect, payload, 1024);
+            if (readSize <= 0)
+                break;
+            size += readSize;
+            DecodeMessage(payload, size, head.masking_key);
+            printf("Receive message from client:\n\n");
+            printf("%s\n", payload);
+            write(connect, payload, readSize);
+        }
 
     }
 
