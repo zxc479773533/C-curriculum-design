@@ -266,7 +266,7 @@ int main(void) {
         printf("Receive message from client:\n\n");
         printf("%s\n", payload);
         bzero(payload, sizeof(payload));
-        strcpy(payload, "Test:\nLine1");
+        strcpy(payload, "录入成功\n");
         SendMessage(connect, payload, sizeof(payload));
 
     }

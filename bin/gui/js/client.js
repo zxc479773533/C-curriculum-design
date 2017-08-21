@@ -34,7 +34,7 @@ ws.onclose = function (evt) {
 function mainReceive (data) {
     console.log(data);
     data = data.replace('\n', '<br/>');
-
+    data += '<br/>'
     /*TO BE WRITE*/
 
     document.getElementById('console').innerHTML += data;

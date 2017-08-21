@@ -2,6 +2,7 @@
 /* CSS Document */
 
 #main {
+	border: 2px ridge blue;
 	margin: auto;
 	background: url(../images/background.jpg);
 	height: 663px;

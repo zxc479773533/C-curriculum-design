@@ -2,6 +2,7 @@
 /* CSS Document */
 
 #main {
+	border: 2px ridge blue;
 	margin: auto;
 	background: url(../images/background.jpg);
 	height: 663px;
@@ -47,4 +48,16 @@ ul {
 	font-size: 14px;
 	background-color: royalblue;
 	color: white;
+}
+
+#console {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	border: 2px groove black;
+	background-color: white;
+	margin-left: 5px;
+	height: 260px;
+	width: 427px;
+	overflow-y: scroll;
+	padding-top: 10px;
+	padding-left: 10px;
 }
