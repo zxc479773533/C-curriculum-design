@@ -47,10 +47,10 @@ function mainSend () {
     
     for (let arg of arguments) {
         if (arguments == '') {
-            buffer += ' #';
+            buffer += '#\r\n';
         }
         else {
-            buffer += ' ' + arg;
+            buffer += arg + '\r\n';
         }
     }
     console.log(buffer);

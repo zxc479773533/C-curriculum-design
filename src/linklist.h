@@ -18,7 +18,7 @@
 
 
 
-/* informatino struct definations */
+/* struct definations */
 
 // distribution lines
 typedef struct {

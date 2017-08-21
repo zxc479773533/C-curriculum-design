@@ -1,47 +1,13 @@
 /*
 * Part: Backstage server
+* Module: Server achieve
 * Author: zxc479773533@github.com
 * LICENSE: GNU GENERAL PUBLIC LICENSE V3.0
 */
 
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/shm.h>
-#include <signal.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <errno.h>
-#include <openssl/sha.h>
-#include <openssl/pem.h>
-#include <openssl/bio.h>
-#include <openssl/evp.h>
-
-#include "linklist.h"
-
-// the socket queue length
-#define QUEUE 20
-
-// the port that server use
-#define PORT 8080
-
-// the max message size receive from client
-#define BUFF_SIZE 1024
-
-// the key used to build conncetion
-#define KEY "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
-
+#include "wsserver.h"
 
 int base64_encode(char *in_str, int in_len, char *out_str) {
-/*
-* Function Name: base64_encode
-* Module: Server
-* Parameter: char *in_str, int in_len, char *out_str
-* Return: int
-* Use: Base64 encode function, used to build connection
-*/
 
     BIO *b64, *bio;
     BUF_MEM *bptr = NULL;
@@ -67,13 +33,6 @@ int base64_encode(char *in_str, int in_len, char *out_str) {
 }
 
 int readline(char *buff, int pos, char *line) {
-/*
-* Function Name: readline
-* Module: Server
-* Parameter: char *buf, int pos, char *line
-* Return: int
-* Use: read a line string form buffer
-*/ 
 
     int len = strlen(buff);
     for (; pos < len; pos++) {
@@ -86,13 +45,6 @@ int readline(char *buff, int pos, char *line) {
 }
 
 int shakehands(int sock_client) {
-/*
-* Function Name: shakehands
-* Module: Server
-* Parameter: int sock_client
-* Return: int
-* Use: shakehands with client and build connection
-*/ 
 
     // definations
     int pos = 0;
@@ -112,7 +64,7 @@ int shakehands(int sock_client) {
     printf("%s\n", request);
 
     // prase request
-    do {
+    while ((request[pos] != '\r' || request[pos + 1] != '\n') && pos != -1) {
 
         // traversal lines
         bzero(&line, sizeof(line));
@@ -135,13 +87,18 @@ int shakehands(int sock_client) {
             printf("%s", response);
 
             // send response
-            if (write(sock_client, response, strlen(response)) < 0)
-                return -1;
+            write(sock_client, response, strlen(response));
             break;
         }
 
-    } while((request[pos] != '\r' || request[pos + 1] != '\n') && pos != -1);
+    }
     return 0;
+}
+
+void DecodeMessage(char *data, int len, char *mask) {
+
+
+
 }
 
 int main(void) {
@@ -196,14 +153,14 @@ int main(void) {
 
     // main
     while (1) {
-        
-        int sock_client;
-        sock_client = accept(sock_server, (struct sockaddr*)&clieaddr, &len);
 
-        printf("data : %d\n", ++count);
         bzero(&buff, sizeof(buff));
-        int cmd_len = recv(sock_client, buff, sizeof(buff), 0);
+        read(connect, buff, sizeof(buff));
+        if (strlen(buff) == 0)
+            continue;
+        printf("data : %d\n", ++count);
         printf("%s\n", buff);
+
     }
 
     return 0;
