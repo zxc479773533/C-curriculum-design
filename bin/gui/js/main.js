@@ -72,8 +72,6 @@ myForm.push({
     ],
     optionalArg: [
         'name',
-        'distance',
-        'distance_to_before',
         'time_to_arrive',
         'time_to_stay'
     ],
@@ -89,7 +87,7 @@ myForm.push({
     optionalArg: [
         'driver_name',
         'driver_mobile',
-        'available_capacity',
+        'total_capacity',
         'unload',
         'upload'
     ],

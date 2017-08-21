@@ -157,6 +157,47 @@ void DecodeMessage(char *data, int len, u_char *mask) {
         *(data + i) ^=*(mask + (i % 4));
 }
 
+
+// send message to client
+int SendMessage(int fd, char *payload, int payload_length) {
+
+    char *buffer;
+    int head_length;
+
+    if (payload_length < 126) {
+        buffer = (char *)malloc(2 + payload_length);
+        buffer[0] = 0x81;
+        buffer[1] = payload_length;
+        head_length = 2;
+    }
+
+    else if (payload_length < 0xffff) {
+        buffer = (char *)malloc(4 + payload_length);
+        buffer[0] = 0x81;
+        buffer[1] = 126;
+        buffer[2] = (payload_length >> 8 & 0xff);
+        buffer[3] = (payload_length & 0xff);
+        head_length = 4;
+    }
+
+    else {
+        buffer = (char *)malloc(12 + payload_length);
+        buffer[0] = 0x81;
+        buffer[1] = 127;
+        memcpy(buffer + 2, &payload_length, sizeof(unsigned long long));
+        strreverse(buffer + 2, sizeof(unsigned long long));
+        head_length = 12;
+    }
+
+    // send packet
+    memcpy(buffer + head_length, payload, payload_length);
+    if (write(fd, buffer, head_length + payload_length) <= 0)
+        return -1;
+
+    free(buffer);
+    return 0;
+}
+
 int main(void) {
 
     // create socket
@@ -195,7 +236,7 @@ int main(void) {
 
     // no error
     printf("\n");
-    printf("Server working......\n");
+    printf("Server working......\n\n");
 
     // create client socket sockaddr
     int count = 0;
@@ -212,24 +253,24 @@ int main(void) {
 
         websocket_head head;
         char payload[BUFF_SIZE];
-        int size = 0;
+        bzero(payload, BUFF_SIZE);
 
         int Ecode = receive_and_parse(connect, &head);
         if (Ecode < 0)
-            break;
+            continue;
 
-        while (size < head.payload_length) {
-            int readSize = read(connect, payload, 1024);
-            if (readSize <= 0)
-                break;
-            size += readSize;
-            DecodeMessage(payload, size, head.masking_key);
-            printf("Receive message from client:\n\n");
-            printf("%s\n", payload);
-            write(connect, payload, readSize);
-        }
+        int readSize = read(connect, payload, 1024);
+        if (readSize <= 0)
+            continue;
+        DecodeMessage(payload, readSize, head.masking_key);
+        printf("Receive message from client:\n\n");
+        printf("%s\n", payload);
+        SendMessage(connect, payload, sizeof(payload));
 
     }
 
+    // close
+    close(connect);
+    close(sock_server);
     return 0;
 }

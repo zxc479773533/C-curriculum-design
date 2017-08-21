@@ -131,7 +131,14 @@ extern void DecodeMessage(char *data, int len, u_char *mask);
 * Use: decode message
 */ 
 
-
+extern int SendMessage(int fd, char *payload, int payload_length);
+/*
+* Function Name: SendMessage
+* Module: Server
+* Parameter: int fd, char *payload, int payload_length
+* Return: int
+* Use: send message to client
+*/ 
 
 
 
