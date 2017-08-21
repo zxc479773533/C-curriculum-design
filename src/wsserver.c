@@ -265,6 +265,8 @@ int main(void) {
         DecodeMessage(payload, readSize, head.masking_key);
         printf("Receive message from client:\n\n");
         printf("%s\n", payload);
+        bzero(payload, sizeof(payload));
+        strcpy(payload, "Test:\nLine1");
         SendMessage(connect, payload, sizeof(payload));
 
     }
