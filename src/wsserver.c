@@ -198,15 +198,101 @@ int SendMessage(int fd, char *payload, int payload_length) {
     return 0;
 }
 
+// load data from file
+int LoadData(void) {
+
+    // open data files
+    FILE *fpl, *fps, *fpc;
+    if ((fpl = fopen("/tmp/.c-curriculum-design/linedb", "rb")) == NULL)
+        return -1;
+    if ((fps = fopen("/tmp/.c-curriculum-design/stationdb", "rb")) == NULL)
+        return -1;
+    if ((fps = fopen("/tmp/.c-curriculum-design/cardb", "rb")) == NULL)
+        return -1;
+
+    // create lists
+    Linklist L;
+    ListInitial(&L);
+    int size;
+
+    // create line
+    while (1) {
+        Line LineInfo;
+        size = fread(&LineInfo, sizeof(LineInfo), 1, fpl);
+        if (size == 0)
+            break;
+        ListInsert_F(&L, LineInfo);
+    }
+
+    // create stations
+    while (1) {
+        Station StationInfo;
+        size = fread(&StationInfo, sizeof(StationInfo), 1, fps);
+        if (size == 0)
+            break;
+        ListInsert_S(&L, StationInfo);
+    }
+
+    // create cars
+    while (1) {
+        Car CarInfo;
+        size = fread(&CarInfo, sizeof(CarInfo), 1, fpc);
+        if (size == 0)
+            break;
+        ListInsert_T(&L, CarInfo);
+    }
+
+    // close files
+    fclose(fpl);
+    fclose(fps);
+    fclose(fpc);
+
+    return 0;
+}
+
+// save data into file
+int SaveData(Linklist *L) {
+
+    // open data files
+    FILE *fpl, *fps, *fpc;
+    if ((fpl = fopen("/tmp/.c-curriculum-design/linedb", "wb")) == NULL)
+        return -1;
+    if ((fps = fopen("/tmp/.c-curriculum-design/stationdb", "wb")) == NULL)
+        return -1;
+    if ((fps = fopen("/tmp/.c-curriculum-design/cardb", "wb")) == NULL)
+        return -1;
+
+    // save
+    FirstNode *tail_L = L->head;
+    while (tail_L != NULL) {
+
+        SecondNode *tail_S = tail_L->first_child;
+        while (tail_S != NULL) {
+
+            ThirdNode *tail_C = tail_S->first_child;
+            while (tail_C != NULL) {
+                fwrite(&tail_C->CarInfo, sizeof(Car), 1, fpc);
+                tail_C = tail_C->next;
+            }
+            fwrite(&tail_S->StationInfo, sizeof(Station), 1, fps);
+            tail_S = tail_S->next;
+        }
+        fwrite(&tail_L->LineInfo, sizeof(Line), 1, fpl);
+        tail_L = tail_L->next;
+    }
+
+    return 0;
+}
+
 // analyze the message and schedule the functions
-void Backstage_Main(char *payload, int payload_len) {
+void Backstage_Main(char *payload, int payload_length) {
 
     int pos = 0;
     char line[LINE_SIZE];
     pos = readline(payload, pos, line);
 
     if (strncmp(line, "ImputLine", 9) == 0) {
-        bzero(payload, payload_len);
+        bzero(payload, payload_length);
         strncpy(payload, line, 9);
     }
 

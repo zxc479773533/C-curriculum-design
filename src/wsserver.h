@@ -114,7 +114,7 @@ extern void strreverse(char *str, int len);
 * Parameter: char *str, int len
 * Return: None
 * Use: reverse string
-*/ 
+*/
 
 extern int receive_and_parse(int sock, websocket_head *pWS);
 /*
@@ -123,7 +123,7 @@ extern int receive_and_parse(int sock, websocket_head *pWS);
 * Parameter: int sock, websocket_head *pWS
 * Return: int
 * Use: receive message from client and parse it
-*/ 
+*/
 
 extern void DecodeMessage(char *data, int len, u_char *mask);
 /*
@@ -132,7 +132,7 @@ extern void DecodeMessage(char *data, int len, u_char *mask);
 * Parameter: char *data, int len, u_char *mask
 * Return: None
 * Use: decode message
-*/ 
+*/
 
 extern int SendMessage(int fd, char *payload, int payload_length);
 /*
@@ -141,16 +141,39 @@ extern int SendMessage(int fd, char *payload, int payload_length);
 * Parameter: int fd, char *payload, int payload_length
 * Return: int
 * Use: send message to client
-*/ 
+*/
 
-extern void Backstage_Main(char *payload, int payload_len);
+extern int LoadData(void);
 /*
-* Function Name: SendMessage
+* Function Name: LoadData
+* Module: Server
+* Parameter: None
+* Return: int
+* Use: load data from file
+*/
+
+extern int SaveData(Linklist *L);
+/*
+* Function Name: SaveData
+* Module: Server
+* Parameter: Linklist *L
+* Return: int
+* Use: save data into file
+*/
+
+extern void Backstage_Main(char *payload, int payload_length);
+/*
+* Function Name: Backstage_Main
 * Module: Server
 * Parameter: char *payload, int payload_len
 * Return: Node
 * Use: analyze the message and schedule the functions
-*/ 
+*/
+
+
+
+
+
 
 
 #endif // !__WSSERVER_H_
