@@ -53,6 +53,5 @@ function mainSend () {
             buffer += arg + '\r\n';
         }
     }
-    console.log(buffer);
     ws.send(buffer);
 }

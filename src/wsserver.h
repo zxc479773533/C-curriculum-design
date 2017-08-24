@@ -39,6 +39,9 @@
 // the max message size receive from client
 #define BUFF_SIZE 1024
 
+// the line size
+#define LINE_SIZE 256
+
 // the key used to build conncetion
 #define KEY "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 
@@ -140,8 +143,14 @@ extern int SendMessage(int fd, char *payload, int payload_length);
 * Use: send message to client
 */ 
 
-
-
+extern void Backstage_Main(char *payload, int payload_len);
+/*
+* Function Name: SendMessage
+* Module: Server
+* Parameter: char *payload, int payload_len
+* Return: Node
+* Use: analyze the message and schedule the functions
+*/ 
 
 
 #endif // !__WSSERVER_H_

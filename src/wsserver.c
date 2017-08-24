@@ -52,7 +52,7 @@ int shakehands(int sock_client) {
     // definations
     int pos = 0;
     char request[BUFF_SIZE];
-    char line[256];
+    char line[LINE_SIZE];
     //Sec-WebSocket-Accept
     char sec_accept[32];
     //sha1 data
@@ -198,6 +198,60 @@ int SendMessage(int fd, char *payload, int payload_length) {
     return 0;
 }
 
+// analyze the message and schedule the functions
+void Backstage_Main(char *payload, int payload_len) {
+
+    int pos = 0;
+    char line[LINE_SIZE];
+    pos = readline(payload, pos, line);
+
+    if (strncmp(line, "ImputLine", 9) == 0) {
+        bzero(payload, payload_len);
+        strncpy(payload, line, 9);
+    }
+
+    else if (strncmp(line, "ImputStation", 12) == 0) {
+
+    }
+
+    else if (strncmp(line, "ImputCar", 8) == 0) {
+
+    }
+
+    else if (strncmp(line, "ModifyLine", 10) == 0) {
+
+    }
+
+    else if (strncmp(line, "ModifyStation", 13) == 0) {
+
+    }
+
+    else if (strncmp(line, "ModifyCar", 9) == 0) {
+
+    }
+
+    else if (strncmp(line, "DeleteLine", 10) == 0) {
+
+    }
+
+    else if (strncmp(line, "DeleteStation", 13) == 0) {
+
+    }
+
+    else if (strncmp(line, "DeleteCar", 9) == 0) {
+
+    }
+
+    else if (strncmp(line, "Statistics", 10) == 0) {
+
+    }
+
+    else if (strncmp(line, "Inquire", 7) == 0) {
+
+    }
+
+}
+
 int main(void) {
 
     // create socket
@@ -265,8 +319,9 @@ int main(void) {
         DecodeMessage(payload, readSize, head.masking_key);
         printf("Receive message from client:\n\n");
         printf("%s\n", payload);
-        bzero(payload, sizeof(payload));
-        strcpy(payload, "录入成功\n");
+        
+        Backstage_Main(payload, sizeof(payload));
+        
         SendMessage(connect, payload, sizeof(payload));
 
     }
