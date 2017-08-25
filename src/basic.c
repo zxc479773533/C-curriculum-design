@@ -308,11 +308,16 @@ void ModifyLine(Linklist *L, Line LineInfo) {
 
     // find the line
     else {
-        strcpy(Line->LineInfo.name,LineInfo.name);
-        strcpy(Line->LineInfo.principal_name,LineInfo.principal_name);
-        strcpy(Line->LineInfo.principal_tel,LineInfo.principal_tel);
-        strcpy(Line->LineInfo.principal_mobile,LineInfo.principal_mobile);
-        strcpy(Line->LineInfo.principal_email,LineInfo.principal_email);
+        if (Line->LineInfo.name[0] != '#')
+            strcpy(Line->LineInfo.name, LineInfo.name);
+        if (Line->LineInfo.principal_name[0] != '#')
+        strcpy(Line->LineInfo.principal_name, LineInfo.principal_name);
+        if (Line->LineInfo.principal_tel[0] != '#')
+        strcpy(Line->LineInfo.principal_tel, LineInfo.principal_tel);
+        if (Line->LineInfo.principal_mobile[0] != '#')
+        strcpy(Line->LineInfo.principal_mobile, LineInfo.principal_mobile);
+        if (Line->LineInfo.principal_mobile[0] != '#')
+        strcpy(Line->LineInfo.principal_email, LineInfo.principal_email);
         strcpy(L->error, "");
     }
 
@@ -343,8 +348,11 @@ void ModifyStation(Linklist *L, Station StationInfo) {
 
         // find the station
         else  {
-            strcpy(tail_S->StationInfo.name, StationInfo.name);
-            tail_S->StationInfo.time_to_arrive = StationInfo.time_to_arrive;
+            if (StationInfo.name[0] != '#')
+                strcpy(tail_S->StationInfo.name, StationInfo.name);
+            if (StationInfo.time_to_arrive != -1)
+                tail_S->StationInfo.time_to_arrive = StationInfo.time_to_arrive;
+            if (StationInfo.time_to_stay != -1)
             tail_S->StationInfo.time_to_stay = StationInfo.time_to_stay;
             set_No_and_time(tail_L);
             strcpy(L->error, "");
@@ -389,10 +397,16 @@ void ModifyCar(Linklist *L, Car CarInfo) {
 
             // find the car
             else {
-                strcpy(tail_C->CarInfo.driver_name, CarInfo.driver_name);
-                strcpy(tail_C->CarInfo.driver_mobile, CarInfo.driver_mobile);
-                tail_C->CarInfo.goods_list.unload = CarInfo.goods_list.unload;
-                tail_C->CarInfo.goods_list.upload = CarInfo.goods_list.upload;
+                if (CarInfo.driver_name[0] != '#')
+                    strcpy(tail_C->CarInfo.driver_name, CarInfo.driver_name);
+                if (CarInfo.driver_mobile[0] != '#')
+                    strcpy(tail_C->CarInfo.driver_mobile, CarInfo.driver_mobile);
+                if (CarInfo.goods_list.total_capacity != -1)
+                    tail_C->CarInfo.goods_list.total_capacity = CarInfo.goods_list.total_capacity;
+                if (CarInfo.goods_list.unload != -1)
+                    tail_C->CarInfo.goods_list.unload = CarInfo.goods_list.unload;
+                if (CarInfo.goods_list.upload != -1)
+                    tail_C->CarInfo.goods_list.upload = CarInfo.goods_list.upload;
                 set_car_capacity(tail_L, CarInfo);
                 strcpy(L->error, "");
             }

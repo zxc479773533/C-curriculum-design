@@ -199,21 +199,20 @@ int SendMessage(int fd, char *payload, int payload_length) {
 }
 
 // load data from file
-int LoadData(void) {
-
+void LoadData(Linklist *L) {
+    
     // open data files
     FILE *fpl, *fps, *fpc;
     if ((fpl = fopen("/tmp/.c-curriculum-design/linedb", "rb")) == NULL)
-        return -1;
+        return ;
     if ((fps = fopen("/tmp/.c-curriculum-design/stationdb", "rb")) == NULL)
-        return -1;
-    if ((fps = fopen("/tmp/.c-curriculum-design/cardb", "rb")) == NULL)
-        return -1;
+        return ;
+    if ((fpc = fopen("/tmp/.c-curriculum-design/cardb", "rb")) == NULL)
+        return ;
 
     // create lists
-    Linklist L;
-    ListInitial(&L);
-    int size;
+    ListInitial(L);
+    int size;    
 
     // create line
     while (1) {
@@ -221,7 +220,7 @@ int LoadData(void) {
         size = fread(&LineInfo, sizeof(LineInfo), 1, fpl);
         if (size == 0)
             break;
-        ListInsert_F(&L, LineInfo);
+        ListInsert_F(L, LineInfo);
     }
 
     // create stations
@@ -230,7 +229,7 @@ int LoadData(void) {
         size = fread(&StationInfo, sizeof(StationInfo), 1, fps);
         if (size == 0)
             break;
-        ListInsert_S(&L, StationInfo);
+        ListInsert_S(L, StationInfo);
     }
 
     // create cars
@@ -239,15 +238,13 @@ int LoadData(void) {
         size = fread(&CarInfo, sizeof(CarInfo), 1, fpc);
         if (size == 0)
             break;
-        ListInsert_T(&L, CarInfo);
+        //ListInsert_T(L, CarInfo);
     }
 
     // close files
     fclose(fpl);
     fclose(fps);
     fclose(fpc);
-
-    return 0;
 }
 
 // save data into file
@@ -259,7 +256,7 @@ int SaveData(Linklist *L) {
         return -1;
     if ((fps = fopen("/tmp/.c-curriculum-design/stationdb", "wb")) == NULL)
         return -1;
-    if ((fps = fopen("/tmp/.c-curriculum-design/cardb", "wb")) == NULL)
+    if ((fpc = fopen("/tmp/.c-curriculum-design/cardb", "wb")) == NULL)
         return -1;
 
     // save
@@ -281,7 +278,16 @@ int SaveData(Linklist *L) {
         tail_L = tail_L->next;
     }
 
+    fclose(fpl);
+    fclose(fps);
+    fclose(fpc);
     return 0;
+}
+
+// get information
+int Readline(char *buff, int pos, char *line) {
+    bzero(line, LINE_SIZE);
+    return readline(buff, pos, line);
 }
 
 // analyze the message and schedule the functions
@@ -290,44 +296,228 @@ void Backstage_Main(char *payload, int payload_length) {
     int pos = 0;
     char line[LINE_SIZE];
     pos = readline(payload, pos, line);
-
+    Linklist L;
+    LoadData(&L);
+    
     if (strncmp(line, "ImputLine", 9) == 0) {
+
+        Line LineInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.name, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.principal_name, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.principal_tel, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.principal_mobile, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.principal_email, line);        
+        
+        ListInsert_F(&L, LineInfo);
+
         bzero(payload, payload_length);
-        strncpy(payload, line, 9);
+        strcpy(payload, "录入配送路线成功\n");
     }
 
     else if (strncmp(line, "ImputStation", 12) == 0) {
 
+        Station StationInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.line_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.name, line);
+        pos = Readline(payload, pos, line);
+        StationInfo.distance = atof(line);     
+        pos = Readline(payload, pos, line);
+        StationInfo.time_to_arrive = atof(line);
+        pos = Readline(payload, pos, line);
+        StationInfo.time_to_stay = atof(line);
+
+        ListInsert_S(&L, StationInfo);
+
+        bzero(payload, payload_length);
+        if (strlen(L.error) == 0)
+            strcpy(payload, "录入站点成功\n");
+        else
+            strcpy(payload, L.error);
     }
 
     else if (strncmp(line, "ImputCar", 8) == 0) {
 
+        Car CarInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.license_plate, line);        
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.line_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.station_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.driver_name, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.driver_mobile, line);
+        pos = Readline(payload, pos, line);
+        CarInfo.goods_list.total_capacity = atof(line);
+        pos = Readline(payload, pos, line);
+        CarInfo.goods_list.unload = atof(line);
+        pos = Readline(payload, pos, line);
+        CarInfo.goods_list.upload = atof(line);
+
+        ListInsert_T(&L, CarInfo);
+
+        bzero(payload, payload_length);
+        if (strlen(L.error) == 0)
+            strcpy(payload, "录入车辆成功\n");
+        else
+            strcpy(payload, L.error);
     }
+    
 
     else if (strncmp(line, "ModifyLine", 10) == 0) {
 
+        Line LineInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.name, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.principal_name, line);        
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.principal_tel, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.principal_mobile, line);
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.principal_email, line);
+
+        ModifyLine(&L, LineInfo);
+
+        bzero(payload, payload_length);
+        if (strlen(L.error) == 0)
+            strcpy(payload, "修改路线信息成功\n");
+        else
+            strcpy(payload, L.error);
     }
 
     else if (strncmp(line, "ModifyStation", 13) == 0) {
 
+        Station StationInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.line_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.name, line);
+        pos = Readline(payload, pos, line);
+        if (line[0] == '#')
+            StationInfo.time_to_arrive = -1;
+        else
+            StationInfo.time_to_arrive = atof(line);
+        pos = Readline(payload, pos, line);
+        if (line[0] == '#')
+            StationInfo.time_to_stay = -1;
+        else
+            StationInfo.time_to_stay = atof(line);
+
+        ModifyStation(&L, StationInfo);
+
+        bzero(payload, payload_length);
+        if (strlen(L.error) == 0)
+            strcpy(payload, "修改站点信息成功\n");
+        else
+            strcpy(payload, L.error);
     }
 
     else if (strncmp(line, "ModifyCar", 9) == 0) {
 
+        Car CarInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.license_plate, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.line_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.station_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.driver_name, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.driver_mobile, line);
+        pos = Readline(payload, pos, line);
+        if (line[0] == '#')
+            CarInfo.goods_list.total_capacity = -1;
+        else
+            CarInfo.goods_list.total_capacity = atof(line);
+        pos = Readline(payload, pos, line);
+        if (line[0] == '#')
+            CarInfo.goods_list.unload =  -1;
+        else
+            CarInfo.goods_list.unload = atof(line);
+        pos = Readline(payload, pos, line);
+        if (line[0] == '#')
+            CarInfo.goods_list.upload = -1;
+        else
+            CarInfo.goods_list.upload = atof(line);
+        ModifyCar(&L, CarInfo);
+
+        bzero(payload, payload_length);
+        if (strlen(L.error) == 0)
+            strcpy(payload, "修改车辆信息成功\n");
+        else
+            strcpy(payload, L.error);
     }
 
     else if (strncmp(line, "DeleteLine", 10) == 0) {
 
+        Line LineInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.number, line);
+
+        DeleteLine(&L, LineInfo);
+
+        bzero(payload, payload_length);
+        if (strlen(L.error) == 0)
+            strcpy(payload, "删除路线成功\n");
+        else
+            strcpy(payload, L.error);
     }
 
     else if (strncmp(line, "DeleteStation", 13) == 0) {
 
+        Station StationInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.line_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.number, line);
+
+        DeleteStation(&L, StationInfo);
+
+        bzero(payload, payload_length);
+        if (strlen(L.error) == 0)
+            strcpy(payload, "删除站点成功\n");
+        else
+            strcpy(payload, L.error);
     }
 
     else if (strncmp(line, "DeleteCar", 9) == 0) {
 
-    }
+        Car CarInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.line_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.station_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.license_plate, line);
 
+        DeleteCar(&L, CarInfo);
+
+        bzero(payload, payload_length);
+        if (strlen(L.error) == 0)
+            strcpy(payload, "删除车辆成功\n");
+        else
+            strcpy(payload, L.error);
+    }
+/*
     else if (strncmp(line, "Statistics", 10) == 0) {
 
     }
@@ -335,7 +525,9 @@ void Backstage_Main(char *payload, int payload_length) {
     else if (strncmp(line, "Inquire", 7) == 0) {
 
     }
+*/
 
+    SaveData(&L);
 }
 
 int main(void) {

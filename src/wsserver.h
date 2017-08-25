@@ -143,12 +143,12 @@ extern int SendMessage(int fd, char *payload, int payload_length);
 * Use: send message to client
 */
 
-extern int LoadData(void);
+extern void LoadData(Linklist *L);
 /*
 * Function Name: LoadData
 * Module: Server
-* Parameter: None
-* Return: int
+* Parameter: Linklist *L
+* Return: None
 * Use: load data from file
 */
 

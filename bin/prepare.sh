@@ -1,4 +1,6 @@
-"#!/bin/sh"
+#!/bin/sh
+
+mkdir /tmp/.c-curriculum-design
 
 touch /tmp/.c-curriculum-design/linedb
 
