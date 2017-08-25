@@ -210,35 +210,51 @@ void LoadData(Linklist *L) {
     if ((fpc = fopen("/tmp/.c-curriculum-design/cardb", "rb")) == NULL)
         return ;
 
-    // create lists
+    // create three linklist to keep the data
+    int size = 1;
+    FirstNode Line_H, *tail_L = Line_H.next;
+    SecondNode Station_H, *tail_S = Station_H.next;
+    ThirdNode Car_H, *tail_C = Car_H.next;
+
+    while (size == 1) {
+        FirstNode *tmp_L = (FirstNode *)malloc(sizeof(FirstNode));
+        size = fread(tmp_L, sizeof(FirstNode), 1, fpl);
+        tail_L = tmp_L;
+        tail_L = tail_L->next;
+    }
+
+    size = 1;
+    while (size == 1) {
+        SecondNode *tmp_S = (SecondNode *)malloc(sizeof(SecondNode));
+        size = fread(tmp_S, sizeof(SecondNode), 1, fps);
+        tail_S = tmp_S;
+        tail_S = tail_S->next;
+    }
+
+    size = 1;
+    while (size == 1) {
+        ThirdNode *tmp_C = (ThirdNode *)malloc(sizeof(ThirdNode));
+        size = fread(tmp_C, sizeof(ThirdNode), 1, fpc);
+        tail_C = tmp_C;
+        tail_C = tail_C->next;
+    }
+
+    // create main linklist
     ListInitial(L);
-    int size;    
-
-    // create line
-    while (1) {
-        Line LineInfo;
-        size = fread(&LineInfo, sizeof(LineInfo), 1, fpl);
-        if (size == 0)
-            break;
-        ListInsert_F(L, LineInfo);
+    tail_L = Line_H.next;
+    while (tail_L != NULL) {
+        ListInsert_F(L, tail_L->LineInfo);
+        tail_L = tail_L->next;
     }
-
-    // create stations
-    while (1) {
-        Station StationInfo;
-        size = fread(&StationInfo, sizeof(StationInfo), 1, fps);
-        if (size == 0)
-            break;
-        ListInsert_S(L, StationInfo);
+    tail_S = Station_H.next;
+    while (tail_S != NULL) {
+        ListInsert_S(L, tail_S->StationInfo);
+        tail_S = tail_S->next;
     }
-
-    // create cars
-    while (1) {
-        Car CarInfo;
-        size = fread(&CarInfo, sizeof(CarInfo), 1, fpc);
-        if (size == 0)
-            break;
-        //ListInsert_T(L, CarInfo);
+    tail_C = Car_H.next;
+    while (tail_C != NULL) {
+        ListInsert_T(L, tail_C->CarInfo);
+        tail_C = tail_C->next;
     }
 
     // close files
@@ -259,7 +275,7 @@ int SaveData(Linklist *L) {
     if ((fpc = fopen("/tmp/.c-curriculum-design/cardb", "wb")) == NULL)
         return -1;
 
-    // save
+    // save data to three files
     FirstNode *tail_L = L->head;
     while (tail_L != NULL) {
 
@@ -268,13 +284,13 @@ int SaveData(Linklist *L) {
 
             ThirdNode *tail_C = tail_S->first_child;
             while (tail_C != NULL) {
-                fwrite(&tail_C->CarInfo, sizeof(Car), 1, fpc);
+                fwrite(tail_C, sizeof(ThirdNode), 1, fpc);
                 tail_C = tail_C->next;
             }
-            fwrite(&tail_S->StationInfo, sizeof(Station), 1, fps);
+            fwrite(tail_S, sizeof(SecondNode), 1, fps);
             tail_S = tail_S->next;
         }
-        fwrite(&tail_L->LineInfo, sizeof(Line), 1, fpl);
+        fwrite(tail_L, sizeof(FirstNode), 1, fpl);
         tail_L = tail_L->next;
     }
 
