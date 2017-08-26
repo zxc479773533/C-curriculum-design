@@ -203,7 +203,7 @@ function translateToChinese (arg) {
         case 'principal_name': return '负责人姓名'; break;
         case 'principal_tel': return '负责人办公室电话'; break;
         case 'principal_mobile': return '负责人移动电话'; break;
-        case 'principal_email': return '负责人邮箱'; break;
+        case 'principal_email': return '负责人电子邮箱'; break;
         case 'line_number': return '所在路线编号'; break;
         case 'distance': return '与起点的距离'; break;
         case 'time_to_arrive': return '与上一个站点交通耗时'; break;

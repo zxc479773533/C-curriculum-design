@@ -14,9 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* defines */
-
-
 
 /* struct definations */
 
@@ -47,7 +44,7 @@ typedef struct {
     char name[10];
     float distance; //kilometers
     float distance_to_before; //kilometers
-    float time_to_arrive; //kilometers
+    float time_to_arrive; //minutes
     float time_to_stay; //minutes
 } Station;
 
@@ -94,8 +91,6 @@ typedef struct ThirdNode {
     Car CarInfo;
     struct ThirdNode *next;
 } ThirdNode;
-
-
 
 
 /* functions */
@@ -218,7 +213,32 @@ extern void DeleteLine(Linklist *L, Line LineInfo);
 * Use: Delete a line
 */
 
+extern void GetLineInfo(Linklist *L, Line LineInfo, char *payload);
+/*
+* Function Name: GetLineInfo
+* Module: Statistics
+* Parameter: Linklist *L, Line LineInfo, char *payload
+* Return: None
+* Use: Get all information of a line
+*/
 
+extern void GetStationInfo(Linklist *L, Station StationInfo, char *payload);
+/*
+* Function Name: GetStationInfo
+* Module: Statistics
+* Parameter: Linklist *L, Station StationInfo, char *payload
+* Return: None
+* Use: Get all information of a station
+*/
+
+extern void GetCarInfo(Linklist *L, Car CarInfo, char *payload);
+/*
+* Function Name: GetCarInfo
+* Module: Statistics
+* Parameter: Linklist *L, Car CarInfo, char *payload
+* Return: None
+* Use: Get all information of a car
+*/
 
 
 #endif // !__LINKLIST_H_

@@ -171,9 +171,4 @@ extern void Backstage_Main(char *payload, int payload_length);
 */
 
 
-
-
-
-
-
 #endif // !__WSSERVER_H_

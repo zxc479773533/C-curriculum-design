@@ -1,6 +1,6 @@
 /*
 * Part: Linklist algorithm library
-* Module: Linklist inquire APIs achieve
+* Module: Linklist search APIs achieve
 * Author: zxc479773533@github.com
 * LICENSE: GNU GENERAL PUBLIC LICENSE V3.0
 */

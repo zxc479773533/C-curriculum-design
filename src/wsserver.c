@@ -87,7 +87,7 @@ int shakehands(int sock_client) {
                 "Sec-WebSocket-Accept: %s\r\n" \
                 "\r\n", sec_accept);
             printf("Send HTTP response to client :\n\n");
-            printf("%s", response);
+            printf("%s\n", response);
 
             // send response
             write(sock_client, response, strlen(response));
@@ -567,15 +567,85 @@ void Backstage_Main(char *payload, int payload_length) {
             printf("Error: %s\n", L.error);            
         }
     }
-/*
+
+    else if (strncmp(line, "GetLine", 7) == 0) {
+
+        Line LineInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(LineInfo.number, line);
+
+        bzero(payload, payload_length);
+        GetLineInfo(&L, LineInfo, payload);
+
+        if (strlen(L.error) == 0) {
+            printf("Send line information to client:\n");
+            printf("%s\n", payload);
+        }
+        else {
+            strcpy(payload, "该路线并不存在！\n");
+            printf("Error: %s\n", L.error);
+        }
+    }
+
+    else if (strncmp(line, "GetStation", 10) == 0) {
+
+        Station StationInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.line_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(StationInfo.number, line);
+
+        bzero(payload, payload_length);
+        GetStationInfo(&L, StationInfo, payload);
+
+        if (strlen(L.error) == 0) {
+            printf("Send station information to client:\n");
+            printf("%s\n", payload);
+        }
+        else {
+            strcpy(payload, "该站点并不存在！\n");
+            printf("Error: %s\n", L.error);
+        }
+    }
+
+    else if (strncmp(line, "GetCar", 6) == 0) {
+
+        Car CarInfo;
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.line_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.station_number, line);
+        pos = Readline(payload, pos, line);
+        strcpy(CarInfo.license_plate, line);
+
+        bzero(payload, payload_length);
+        GetCarInfo(&L, CarInfo, payload);
+
+        if (strlen(L.error) == 0) {
+            printf("Send car information to client:\n");
+            printf("Error: %s\n", L.error);
+        }
+        else {
+            strcpy(payload, "该车辆并不存在！\n");
+            printf("Error: %s\n", L.error);
+        }
+    }
+
     else if (strncmp(line, "Statistics", 10) == 0) {
 
     }
 
-    else if (strncmp(line, "Inquire", 7) == 0) {
+    else if (strncmp(line, "SearchLine", 10) == 0) {
 
     }
-*/
+
+    else if (strncmp(line, "SearchStation", 10) == 0) {
+
+    }
+
+    else if (strncmp(line, "SearchCar", 9) == 0) {
+
+    }
 
     SaveData(&L);
 }
