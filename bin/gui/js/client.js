@@ -46,7 +46,7 @@ function mainSend () {
     var buffer = '';
     
     for (let arg of arguments) {
-        if (arguments == '') {
+        if (arg == '') {
             buffer += '#\r\n';
         }
         else {
