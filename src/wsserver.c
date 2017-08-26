@@ -200,7 +200,7 @@ int SendMessage(int fd, char *payload, int payload_length) {
 
 // load data from file
 void LoadData(Linklist *L) {
-    
+
     // open data files
     FILE *fpl, *fps, *fpc;
     if ((fpl = fopen("/tmp/.c-curriculum-design/linedb", "rb")) == NULL)
@@ -212,29 +212,38 @@ void LoadData(Linklist *L) {
 
     // create three linklist to keep the data
     int size = 1;
-    FirstNode Line_H, *tail_L = Line_H.next;
-    SecondNode Station_H, *tail_S = Station_H.next;
-    ThirdNode Car_H, *tail_C = Car_H.next;
+    FirstNode Line_H, *tail_L = &Line_H;
+    SecondNode Station_H, *tail_S = &Station_H;
+    ThirdNode Car_H, *tail_C = &Car_H;
+    tail_L->next = NULL;
+    tail_S->next = NULL;
+    tail_C->next = NULL;
 
-    while (size == 1) {
+    while (1) {
         FirstNode *tmp_L = (FirstNode *)malloc(sizeof(FirstNode));
         size = fread(tmp_L, sizeof(FirstNode), 1, fpl);
-        tail_L = tmp_L;
+        if (size == 0)
+            break;
+        tail_L->next = tmp_L;
         tail_L = tail_L->next;
     }
 
     size = 1;
-    while (size == 1) {
+    while (1) {
         SecondNode *tmp_S = (SecondNode *)malloc(sizeof(SecondNode));
         size = fread(tmp_S, sizeof(SecondNode), 1, fps);
+        if (size == 0)
+            break;
         tail_S = tmp_S;
         tail_S = tail_S->next;
     }
 
     size = 1;
-    while (size == 1) {
+    while (1) {
         ThirdNode *tmp_C = (ThirdNode *)malloc(sizeof(ThirdNode));
         size = fread(tmp_C, sizeof(ThirdNode), 1, fpc);
+        if (size == 0)
+            break;
         tail_C = tmp_C;
         tail_C = tail_C->next;
     }
@@ -314,7 +323,7 @@ void Backstage_Main(char *payload, int payload_length) {
     pos = readline(payload, pos, line);
     Linklist L;
     LoadData(&L);
-    
+
     if (strncmp(line, "ImputLine", 9) == 0) {
 
         Line LineInfo;
@@ -334,7 +343,7 @@ void Backstage_Main(char *payload, int payload_length) {
         ListInsert_F(&L, LineInfo);
 
         bzero(payload, payload_length);
-        strcpy(payload, "录入配送路线成功\n");
+        strcpy(payload, "录入配送路线成功！\n");
     }
 
     else if (strncmp(line, "ImputStation", 12) == 0) {
@@ -357,9 +366,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         bzero(payload, payload_length);
         if (strlen(L.error) == 0)
-            strcpy(payload, "录入站点成功\n");
-        else
-            strcpy(payload, L.error);
+            strcpy(payload, "录入站点成功！\n");
+        else {
+            strcpy(payload, "录入失败！请检查路线是否正确！\n");
+            printf("Error: %s\n", L.error);            
+        }
     }
 
     else if (strncmp(line, "ImputCar", 8) == 0) {
@@ -386,9 +397,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         bzero(payload, payload_length);
         if (strlen(L.error) == 0)
-            strcpy(payload, "录入车辆成功\n");
-        else
-            strcpy(payload, L.error);
+            strcpy(payload, "录入车辆成功！\n");
+        else {
+            strcpy(payload, "录入失败！请检查路线和站点是否正确！\n");
+            printf("Error: %s\n", L.error);            
+        }
     }
     
 
@@ -401,7 +414,8 @@ void Backstage_Main(char *payload, int payload_length) {
         strcpy(LineInfo.name, line);
         pos = Readline(payload, pos, line);
         strcpy(LineInfo.principal_name, line);        
-        pos = Readline(payload, pos, line);
+            strcpy(payload, L.error);
+            pos = Readline(payload, pos, line);
         strcpy(LineInfo.principal_tel, line);
         pos = Readline(payload, pos, line);
         strcpy(LineInfo.principal_mobile, line);
@@ -412,9 +426,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         bzero(payload, payload_length);
         if (strlen(L.error) == 0)
-            strcpy(payload, "修改路线信息成功\n");
-        else
-            strcpy(payload, L.error);
+            strcpy(payload, "修改路线信息成功！\n");
+        else {
+            strcpy(payload, "修改失败！这条路线并不存在！\n");
+            printf("Error: %s\n", L.error);            
+        }
     }
 
     else if (strncmp(line, "ModifyStation", 13) == 0) {
@@ -441,9 +457,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         bzero(payload, payload_length);
         if (strlen(L.error) == 0)
-            strcpy(payload, "修改站点信息成功\n");
-        else
-            strcpy(payload, L.error);
+            strcpy(payload, "修改站点信息成功！\n");
+        else {
+            strcpy(payload, "修改失败！该站点并不存在！\n");
+            printf("Error: %s\n", L.error);            
+        }
     }
 
     else if (strncmp(line, "ModifyCar", 9) == 0) {
@@ -478,9 +496,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         bzero(payload, payload_length);
         if (strlen(L.error) == 0)
-            strcpy(payload, "修改车辆信息成功\n");
-        else
-            strcpy(payload, L.error);
+            strcpy(payload, "修改车辆信息成功！\n");
+        else {
+            strcpy(payload, "修改失败，该车辆并不存在！\n");
+            printf("Error: %s\n", L.error);            
+        }
     }
 
     else if (strncmp(line, "DeleteLine", 10) == 0) {
@@ -493,9 +513,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         bzero(payload, payload_length);
         if (strlen(L.error) == 0)
-            strcpy(payload, "删除路线成功\n");
-        else
-            strcpy(payload, L.error);
+            strcpy(payload, "删除路线成功！\n");
+        else {
+            strcpy(payload, "删除失败！该路线并不存在！\n");
+            printf("Error: %s\n", L.error);
+        }
     }
 
     else if (strncmp(line, "DeleteStation", 13) == 0) {
@@ -510,9 +532,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         bzero(payload, payload_length);
         if (strlen(L.error) == 0)
-            strcpy(payload, "删除站点成功\n");
-        else
-            strcpy(payload, L.error);
+            strcpy(payload, "删除站点成功！\n");
+        else {
+            strcpy(payload, "删除失败！该站点并不存在！\n");
+            printf("Error: %s\n", L.error);            
+        }
     }
 
     else if (strncmp(line, "DeleteCar", 9) == 0) {
@@ -529,9 +553,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         bzero(payload, payload_length);
         if (strlen(L.error) == 0)
-            strcpy(payload, "删除车辆成功\n");
-        else
-            strcpy(payload, L.error);
+            strcpy(payload, "删除车辆成功！\n");
+        else {
+            strcpy(payload, "删除失败！该车辆并不存在！\n");
+            printf("Error: %s\n", L.error);            
+        }
     }
 /*
     else if (strncmp(line, "Statistics", 10) == 0) {
@@ -610,6 +636,7 @@ int main(void) {
         int readSize = read(connect, payload, 1024);
         if (readSize <= 0)
             continue;
+
         DecodeMessage(payload, readSize, head.masking_key);
         printf("Receive message from client:\n\n");
         printf("%s\n", payload);
