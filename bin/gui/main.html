@@ -30,11 +30,22 @@
 			</label>
 			<script>
 				function makeForm(val) {
-					document.getElementById('mainForm').innerHTML = makeFormHTML(val);
+					if (val == 'Main') {
+						document.getElementById('mainForm').innerHTML = makeMainButton();
+					}
+					else if (val == 'Statistics') {
+						document.getElementById('mainForm').innerHTML = makeStatisticsPage();
+					}
+					else if (val == 'Inquire') {
+						document.getElementById('mainForm').innerHTML = makeInquirePage();
+					}
+					else {
+						document.getElementById('mainForm').innerHTML = makeFormHTML(val);						
+					}
 				}
 			</script>
 			<select id="choices" onchange="makeForm(getElementById('choices').value)">
-				<option value>请选择您需要的操作</option>
+				<option value="Main">请选择您需要的操作</option>
 				<option value="ImputLine">录入配送路线信息</option>
 				<option value="ImputStation">录入站点信息</option>
 				<option value="ImputCar">录入车辆信息</option>
@@ -48,7 +59,15 @@
 				<option value="Inquire">查询业务</option>
 			</select>
 			(带<span class="compusory">*</span>的是必填选项)
-			<form id="mainForm" onsubmit="return false;"></form>
+			<form id="mainForm" onsubmit="return false;">
+				<br/><br/><br/>
+				<ul>
+					<li><h3>点击清空所有数据</h3></li>
+					<li>
+						<input id="submit" type="submit" value="清空" onclick="ws.send('Clear')"/>
+					</li>
+				</ul>
+			</form>
 		</div>
 	</div>
 </body>

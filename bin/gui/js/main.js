@@ -230,3 +230,17 @@ function makeFormHTML(val) {
 
     return HTML;
 }
+
+// create main control button
+function makeMainButton() {
+    var HTML = '<br/><br/><br/>';
+    HTML += '<ul><li><h3>点击清空所有数据</h3></li>';
+    HTML += '<li><input id="submit" type="submit" value="提交" onclick="ws.send(\'Clear\')"/>';
+    HTML += '</li></ul>';
+    return HTML;
+}
+
+// create statics page
+function makeStatisticsPage() {
+    
+}

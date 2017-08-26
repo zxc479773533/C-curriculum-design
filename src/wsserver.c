@@ -321,6 +321,14 @@ void Backstage_Main(char *payload, int payload_length) {
     int pos = 0;
     char line[LINE_SIZE];
     pos = readline(payload, pos, line);
+
+    // clear all datas
+    if (strncmp(line, "Clear", 5) == 0) {
+        system("sh Clear.sh");
+        bzero(payload, payload_length);
+        strcpy(payload, "清空成功！\n");
+    }
+
     Linklist L;
     LoadData(&L);
 
