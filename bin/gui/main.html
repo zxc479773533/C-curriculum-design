@@ -33,9 +33,6 @@
 					if (val == 'Main') {
 						document.getElementById('mainForm').innerHTML = makeMainButton();
 					}
-					else if (val == 'Statistics') {
-						document.getElementById('mainForm').innerHTML = makeStatisticsPage();
-					}
 					else if (val == 'Inquire') {
 						document.getElementById('mainForm').innerHTML = makeInquirePage();
 					}
@@ -55,8 +52,13 @@
 				<option value="DeleteLine">删除配送路线</option>
 				<option value="DeleteStation">删除站点</option>
 				<option value="DeleteCar">删除车辆</option>
+				<option value="GetLine">查询配送路线详细信息</option>
+				<option value="GetStation">查询站点详细信息</option>
+				<option value="GetCar">查询车辆详细信息</option>				
 				<option value="Statistics">统计计算</option>
-				<option value="Inquire">查询业务</option>
+				<option value="SearchLine">模糊搜索配送路线</option>
+				<option value="SearchStation">模糊搜索站点</option>
+				<option value="SearchCar">模糊搜索车辆</option>
 			</select>
 			(带<span class="compusory">*</span>的是必填选项)
 			<form id="mainForm" onsubmit="return false;">

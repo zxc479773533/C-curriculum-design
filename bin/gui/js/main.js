@@ -121,15 +121,78 @@ myForm.push({
 });
 
 myForm.push({
-    value: 'Statistics',
-    compulsoryArg: [],
+    value: 'GetLine',
+    compulsoryArg: [
+        'number'
+    ],
     optionalArg: [],
 });
 
 myForm.push({
-    value: 'Inquire',
-    compulsoryArg: [],
+    value: 'GetStation',
+    compulsoryArg: [
+        'line_number',
+        'number'
+    ],
     optionalArg: [],
+})
+
+myForm.push({
+    value: 'GetCar',
+    compulsoryArg: [
+        'line_number',
+        'station_number',
+        'license_plate'
+    ],
+    optionalArg: [],
+})
+
+myForm.push({
+    value: 'Statistics',
+    compulsoryArg: [
+        '请输入汽车车牌号'
+    ],
+    optionalArg: [],
+});
+
+myForm.push({
+    value: 'SearchLine',
+    compulsoryArg: [],
+    optionalArg: [
+        'number',
+        'name',
+        'principal_name',
+        'principal_tel',
+        'principal_mobile',
+        'principal_email'
+    ],
+});
+
+myForm.push({
+    value: 'SearchStation',
+    compulsoryArg: [],
+    optionalArg: [
+        'line_number',
+        'number',
+        'name',
+        'distance',
+        'time_to_arrive',
+        'time_to_stay'
+    ],
+});
+
+myForm.push({
+    value: 'SearchCar',
+    compulsoryArg: [],
+    optionalArg: [
+        'license_plate',
+        'line_number',
+        'station_number',
+        'driver_name',
+        'driver_mobile',
+        'total_capacity',
+        'available_capacity'
+    ],
 });
 
 // translate C Identifier to Chinese
@@ -150,8 +213,10 @@ function translateToChinese (arg) {
         case 'driver_name': return '司机姓名'; break;
         case 'driver_mobile': return '司机移动电话'; break;
         case 'total_capacity': return '汽车总容量(单位：kg)'; break;
+        case 'available_capacity': return '汽车剩余可载货容量(单位：kg)'; break;
         case 'unload': return '在该站的卸货量(单位：kg)'; break;
         case 'upload': return '在该站的装载量(单位：kg)'; break;
+        default: return arg;    
     }
 }
 
@@ -198,6 +263,11 @@ function createForm(mode) {
 
     var form = new String('<ul class="userForm">');
 
+    // special for search
+    if (mode.value == 'SearchLine' || mode.value == 'SearchStation' || mode.value == 'SearchCar') {
+        form += '<li><h3>什么都不填表示显示所有搜索结果</h3></li>';
+    }
+
     // create compulsory arguments
     mode.compulsoryArg.forEach(function (arg) {
         form += createArguments(arg, true);
@@ -235,12 +305,7 @@ function makeFormHTML(val) {
 function makeMainButton() {
     var HTML = '<br/><br/><br/>';
     HTML += '<ul><li><h3>点击清空所有数据</h3></li>';
-    HTML += '<li><input id="submit" type="submit" value="提交" onclick="ws.send(\'Clear\')"/>';
+    HTML += '<li><input id="submit" type="submit" value="清空" onclick="ws.send(\'Clear\')"/>';
     HTML += '</li></ul>';
     return HTML;
-}
-
-// create statics page
-function makeStatisticsPage() {
-    
 }
