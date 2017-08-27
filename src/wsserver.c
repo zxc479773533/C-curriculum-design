@@ -203,11 +203,11 @@ void LoadData(Linklist *L) {
 
     // open data files
     FILE *fpl, *fps, *fpc;
-    if ((fpl = fopen("/tmp/.c-curriculum-design/linedb", "rb")) == NULL)
+    if ((fpl = fopen("/tmp/c-curriculum-design/linedb", "rb")) == NULL)
         return ;
-    if ((fps = fopen("/tmp/.c-curriculum-design/stationdb", "rb")) == NULL)
+    if ((fps = fopen("/tmp/c-curriculum-design/stationdb", "rb")) == NULL)
         return ;
-    if ((fpc = fopen("/tmp/.c-curriculum-design/cardb", "rb")) == NULL)
+    if ((fpc = fopen("/tmp/c-curriculum-design/cardb", "rb")) == NULL)
         return ;
 
     // create three linklist to keep the data
@@ -234,7 +234,7 @@ void LoadData(Linklist *L) {
         size = fread(tmp_S, sizeof(SecondNode), 1, fps);
         if (size == 0)
             break;
-        tail_S = tmp_S;
+        tail_S->next = tmp_S;
         tail_S = tail_S->next;
     }
 
@@ -244,7 +244,7 @@ void LoadData(Linklist *L) {
         size = fread(tmp_C, sizeof(ThirdNode), 1, fpc);
         if (size == 0)
             break;
-        tail_C = tmp_C;
+        tail_C->next = tmp_C;
         tail_C = tail_C->next;
     }
 
@@ -277,11 +277,11 @@ int SaveData(Linklist *L) {
 
     // open data files
     FILE *fpl, *fps, *fpc;
-    if ((fpl = fopen("/tmp/.c-curriculum-design/linedb", "wb")) == NULL)
+    if ((fpl = fopen("/tmp/c-curriculum-design/linedb", "wb")) == NULL)
         return -1;
-    if ((fps = fopen("/tmp/.c-curriculum-design/stationdb", "wb")) == NULL)
+    if ((fps = fopen("/tmp/c-curriculum-design/stationdb", "wb")) == NULL)
         return -1;
-    if ((fpc = fopen("/tmp/.c-curriculum-design/cardb", "wb")) == NULL)
+    if ((fpc = fopen("/tmp/c-curriculum-design/cardb", "wb")) == NULL)
         return -1;
 
     // save data to three files
@@ -320,34 +320,36 @@ void Backstage_Main(char *payload, int payload_length) {
 
     int pos = 0;
     char line[LINE_SIZE];
-    pos = readline(payload, pos, line);
+    pos = Readline(payload, pos, line);
 
-    // clear all datas
-    if (strncmp(line, "Clear", 5) == 0) {
-        system("sh Clear.sh");
+    // clear database
+    if (strncmp(payload, "Clear", 5) == 0) {
+        system("sh ./Clear.sh");
         bzero(payload, payload_length);
         strcpy(payload, "清空成功！\n");
+        return ;
     }
 
     Linklist L;
     LoadData(&L);
 
+    // mode choose
     if (strncmp(line, "ImputLine", 9) == 0) {
 
         Line LineInfo;
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.number, line);
+        strncpy(LineInfo.number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.name, line);
+        strncpy(LineInfo.name, line, 20);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.principal_name, line);
+        strncpy(LineInfo.principal_name, line, 8);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.principal_tel, line);
+        strncpy(LineInfo.principal_tel, line, 8);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.principal_mobile, line);
+        strncpy(LineInfo.principal_mobile, line, 11);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.principal_email, line);        
-        
+        strncpy(LineInfo.principal_email, line, 50);        
+
         ListInsert_F(&L, LineInfo);
 
         bzero(payload, payload_length);
@@ -358,11 +360,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Station StationInfo;
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.line_number, line);
+        strncpy(StationInfo.line_number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.number, line);
+        strncpy(StationInfo.number, line, 10);
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.name, line);
+        strncpy(StationInfo.name, line, 10);
         pos = Readline(payload, pos, line);
         StationInfo.distance = atof(line);     
         pos = Readline(payload, pos, line);
@@ -385,15 +387,15 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Car CarInfo;
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.license_plate, line);        
+        strncpy(CarInfo.license_plate, line, 8);        
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.line_number, line);
+        strncpy(CarInfo.line_number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.station_number, line);
+        strncpy(CarInfo.station_number, line, 10);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.driver_name, line);
+        strncpy(CarInfo.driver_name, line, 8);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.driver_mobile, line);
+        strncpy(CarInfo.driver_mobile, line, 11);
         pos = Readline(payload, pos, line);
         CarInfo.goods_list.total_capacity = atof(line);
         pos = Readline(payload, pos, line);
@@ -411,24 +413,22 @@ void Backstage_Main(char *payload, int payload_length) {
             printf("Error: %s\n", L.error);            
         }
     }
-    
 
     else if (strncmp(line, "ModifyLine", 10) == 0) {
 
         Line LineInfo;
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.number, line);
+        strncpy(LineInfo.number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.name, line);
+        strncpy(LineInfo.name, line, 20);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.principal_name, line);        
-            strcpy(payload, L.error);
-            pos = Readline(payload, pos, line);
-        strcpy(LineInfo.principal_tel, line);
+        strncpy(LineInfo.principal_name, line, 8);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.principal_mobile, line);
+        strncpy(LineInfo.principal_tel, line, 8);
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.principal_email, line);
+        strncpy(LineInfo.principal_mobile, line, 11);
+        pos = Readline(payload, pos, line);
+        strncpy(LineInfo.principal_email, line, 50);
 
         ModifyLine(&L, LineInfo);
 
@@ -445,18 +445,18 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Station StationInfo;
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.line_number, line);
+        strncpy(StationInfo.line_number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.number, line);
+        strncpy(StationInfo.number, line, 10);
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.name, line);
+        strncpy(StationInfo.name, line, 10);
         pos = Readline(payload, pos, line);
-        if (line[0] == '#')
+        if (strcmp(line, "#") == 0)
             StationInfo.time_to_arrive = -1;
         else
             StationInfo.time_to_arrive = atof(line);
         pos = Readline(payload, pos, line);
-        if (line[0] == '#')
+        if (strcmp(line, "#") == 0)
             StationInfo.time_to_stay = -1;
         else
             StationInfo.time_to_stay = atof(line);
@@ -476,27 +476,27 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Car CarInfo;
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.license_plate, line);
+        strncpy(CarInfo.license_plate, line, 8);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.line_number, line);
+        strncpy(CarInfo.line_number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.station_number, line);
+        strncpy(CarInfo.station_number, line, 10);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.driver_name, line);
+        strncpy(CarInfo.driver_name, line, 8);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.driver_mobile, line);
+        strncpy(CarInfo.driver_mobile, line, 11);
         pos = Readline(payload, pos, line);
-        if (line[0] == '#')
+        if (strcmp(line, "#") == 0)
             CarInfo.goods_list.total_capacity = -1;
         else
             CarInfo.goods_list.total_capacity = atof(line);
         pos = Readline(payload, pos, line);
-        if (line[0] == '#')
+        if (strcmp(line, "#") == 0)
             CarInfo.goods_list.unload =  -1;
         else
             CarInfo.goods_list.unload = atof(line);
         pos = Readline(payload, pos, line);
-        if (line[0] == '#')
+        if (strcmp(line, "#") == 0)
             CarInfo.goods_list.upload = -1;
         else
             CarInfo.goods_list.upload = atof(line);
@@ -515,7 +515,7 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Line LineInfo;
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.number, line);
+        strncpy(LineInfo.number, line, 6);
 
         DeleteLine(&L, LineInfo);
 
@@ -532,9 +532,9 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Station StationInfo;
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.line_number, line);
+        strncpy(StationInfo.line_number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.number, line);
+        strncpy(StationInfo.number, line, 6);
 
         DeleteStation(&L, StationInfo);
 
@@ -551,11 +551,11 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Car CarInfo;
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.line_number, line);
+        strncpy(CarInfo.line_number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.station_number, line);
+        strncpy(CarInfo.station_number, line, 10);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.license_plate, line);
+        strncpy(CarInfo.license_plate, line, 8);
 
         DeleteCar(&L, CarInfo);
 
@@ -572,7 +572,7 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Line LineInfo;
         pos = Readline(payload, pos, line);
-        strcpy(LineInfo.number, line);
+        strncpy(LineInfo.number, line, 6);
 
         bzero(payload, payload_length);
         GetLineInfo(&L, LineInfo, payload);
@@ -591,9 +591,9 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Station StationInfo;
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.line_number, line);
+        strncpy(StationInfo.line_number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(StationInfo.number, line);
+        strncpy(StationInfo.number, line, 10);
 
         bzero(payload, payload_length);
         GetStationInfo(&L, StationInfo, payload);
@@ -612,25 +612,25 @@ void Backstage_Main(char *payload, int payload_length) {
 
         Car CarInfo;
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.line_number, line);
+        strncpy(CarInfo.line_number, line, 6);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.station_number, line);
+        strncpy(CarInfo.station_number, line, 10);
         pos = Readline(payload, pos, line);
-        strcpy(CarInfo.license_plate, line);
+        strncpy(CarInfo.license_plate, line, 8);
 
         bzero(payload, payload_length);
         GetCarInfo(&L, CarInfo, payload);
 
         if (strlen(L.error) == 0) {
             printf("Send car information to client:\n");
-            printf("Error: %s\n", L.error);
+            printf("Error: %s\n", payload);
         }
         else {
             strcpy(payload, "该车辆并不存在！\n");
             printf("Error: %s\n", L.error);
         }
     }
-
+/*
     else if (strncmp(line, "Statistics", 10) == 0) {
 
     }
@@ -646,7 +646,7 @@ void Backstage_Main(char *payload, int payload_length) {
     else if (strncmp(line, "SearchCar", 9) == 0) {
 
     }
-
+*/
     SaveData(&L);
 }
 
@@ -703,24 +703,30 @@ int main(void) {
     // main
     while (1) {
 
+        // payload
         websocket_head head;
         char payload[BUFF_SIZE];
         bzero(payload, BUFF_SIZE);
 
+        // receive message
         int Ecode = receive_and_parse(connect, &head);
         if (Ecode < 0)
             continue;
 
+        // get message
         int readSize = read(connect, payload, 1024);
         if (readSize <= 0)
             continue;
 
+        // decode message
         DecodeMessage(payload, readSize, head.masking_key);
         printf("Receive message from client:\n\n");
         printf("%s\n", payload);
-        
+
+        // main control
         Backstage_Main(payload, sizeof(payload));
-        
+
+        // send message to client
         SendMessage(connect, payload, sizeof(payload));
 
     }

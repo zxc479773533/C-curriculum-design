@@ -33,7 +33,7 @@ ws.onclose = function (evt) {
 // receive data from server
 function mainReceive (data) {
     console.log(data);
-    data = data.replace('\n', '<br/>');
+    data = data.replace(/\n/g, '<br/>');
     data += '<br/>'
     /*TO BE WRITE*/
 

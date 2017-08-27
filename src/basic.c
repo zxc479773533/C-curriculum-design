@@ -27,6 +27,7 @@ void set_No_and_time(FirstNode *line) {
     // settle first station
     strcpy(line->LineInfo.start_station, station->StationInfo.number);
     station->StationInfo.No = count;
+    station->StationInfo.distance_to_before = 0;
     total_time += station->StationInfo.time_to_arrive;
     total_time += station->StationInfo.time_to_stay;
     station = station->next;
@@ -38,14 +39,15 @@ void set_No_and_time(FirstNode *line) {
         total_time += station->StationInfo.time_to_arrive;
         total_time += station->StationInfo.time_to_stay;
         station->StationInfo.distance_to_before = station->StationInfo.distance - pre->StationInfo.distance;
-        station = station->next;
         pre = pre->next;
+        station = pre->next;
         count++;
     }
 
     strcpy(line->LineInfo.end_station, pre->StationInfo.number);
     line->LineInfo.stations = count - 1;
     line->LineInfo.total_time = total_time;
+    line->LineInfo.length = pre->StationInfo.distance;
 }
 
 // set available capacity of a car in a line
@@ -144,7 +146,7 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
                         tail_S = tail_S->next;
 
                     // if insert at end
-                    if (tail_L->next == NULL) {
+                    if (tail_S->next == NULL) {
                         SecondNode *new_node = (SecondNode *)malloc(sizeof(SecondNode));
                         new_node->StationInfo = StationInfo;
                         new_node->next = NULL;
@@ -308,16 +310,16 @@ void ModifyLine(Linklist *L, Line LineInfo) {
 
     // find the line
     else {
-        if (Line->LineInfo.name[0] != '#')
+        if (strcmp(LineInfo.name, "#") != 0)
             strcpy(Line->LineInfo.name, LineInfo.name);
-        if (Line->LineInfo.principal_name[0] != '#')
-        strcpy(Line->LineInfo.principal_name, LineInfo.principal_name);
-        if (Line->LineInfo.principal_tel[0] != '#')
-        strcpy(Line->LineInfo.principal_tel, LineInfo.principal_tel);
-        if (Line->LineInfo.principal_mobile[0] != '#')
-        strcpy(Line->LineInfo.principal_mobile, LineInfo.principal_mobile);
-        if (Line->LineInfo.principal_mobile[0] != '#')
-        strcpy(Line->LineInfo.principal_email, LineInfo.principal_email);
+        if (strcmp(LineInfo.principal_name, "#") != 0)
+            strcpy(Line->LineInfo.principal_name, LineInfo.principal_name);
+        if (strcmp(LineInfo.principal_tel, "#") != 0)
+            strcpy(Line->LineInfo.principal_tel, LineInfo.principal_tel);
+        if (strcmp(LineInfo.principal_mobile, "#") != 0)
+            strcpy(Line->LineInfo.principal_mobile, LineInfo.principal_mobile);
+        if (strcmp(LineInfo.principal_email, "#") != 0)
+            strcpy(Line->LineInfo.principal_email, LineInfo.principal_email);
         //bzero(L->error, 50);
     }
 
@@ -348,7 +350,7 @@ void ModifyStation(Linklist *L, Station StationInfo) {
 
         // find the station
         else  {
-            if (StationInfo.name[0] != '#')
+            if (strcmp(StationInfo.name, "#") != 0)
                 strcpy(tail_S->StationInfo.name, StationInfo.name);
             if (StationInfo.time_to_arrive != -1)
                 tail_S->StationInfo.time_to_arrive = StationInfo.time_to_arrive;
@@ -397,9 +399,9 @@ void ModifyCar(Linklist *L, Car CarInfo) {
 
             // find the car
             else {
-                if (CarInfo.driver_name[0] != '#')
+                if (strcmp(CarInfo.driver_name, "#") != 0)
                     strcpy(tail_C->CarInfo.driver_name, CarInfo.driver_name);
-                if (CarInfo.driver_mobile[0] != '#')
+                if (strcmp(CarInfo.driver_mobile, "#") != 0)
                     strcpy(tail_C->CarInfo.driver_mobile, CarInfo.driver_mobile);
                 if (CarInfo.goods_list.total_capacity != -1)
                     tail_C->CarInfo.goods_list.total_capacity = CarInfo.goods_list.total_capacity;

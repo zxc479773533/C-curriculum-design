@@ -31,7 +31,7 @@ void GetLineInfo(Linklist *L, Line LineInfo, char *payload) {
             "总时间：%.2f分钟\r\n" \
             "起始站编号：%s\r\n" \
             "终点站编号：%s\r\n" \
-            "负责人姓名：%s" \
+            "负责人姓名：%s\r\n" \
             "负责人办公室电话：%s\r\n" \
             "负责人移动电话：%s\r\n" \
             "负责人电子邮箱：%s\r\n",
