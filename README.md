@@ -30,8 +30,6 @@ If you have used this system before, you can skip the second step.
 
 You can do `sh /bin/Clear.sh` to clear the database. Of course, you can also do it in GUI.
 
-More informations are in the README.md in /bin and /src.
-
 ## Features
 
 This system uses HTML5 GUI, relying on websocket protocol with a javascript client.
