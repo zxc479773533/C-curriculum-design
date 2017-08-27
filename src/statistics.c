@@ -123,6 +123,100 @@ void GetCarInfo(Linklist *L, Car CarInfo, char *payload) {
 
 }
 
+// judge if the car is the lase in the line
+int IsLast(SecondNode *tail_S, Car CarInfo) {
+    while (tail_S != NULL) {
+        ThirdNode *tail_C = tail_S->first_child;
+        while (tail_C != NULL) {
+            if (strcmp(tail_C->CarInfo.license_plate, CarInfo.license_plate) == 0)
+                return 1;
+            else
+                tail_C = tail_C->next;
+        }
+        tail_S = tail_S->next;
+    }
+    return 0;
+}
+
+// statistical calculation
+void Calculate(Linklist *L, Car CarInfo, char *payload) {
+
+    // counts
+    int count = 0;
+    float max_upload = 0;
+    float max_unload = 0;
+    float total_unload = 0;
+    float total_distance = 0;
+    float total_time = 0;
+
+    // initinal
+    char stations[] = "经停站点：";
+    char station[] = "站点：";
+    char upload[] = "载货：";
+    char unload[] = "卸货：";
+    char maxupload[] = "最大载货：";
+    char maxunload[] = "最大卸货：";
+    char averageunload[] = "平均卸货：";
+    char totallength[] = "总路程：";
+    char totaltime[] = "总耗时：";
+    sprintf(payload, "经停站点：\r\n");
+    payload += sizeof(stations) + 2;
+
+    FirstNode *tail_L = L->head;
+    while (tail_L != NULL) {
+
+        // a flag to find the start
+        int flag = 0;
+
+        SecondNode *tail_S = tail_L->first_child;
+        while (tail_S != NULL) {
+
+            ThirdNode *tail_C = tail_S->first_child;
+            while (tail_C != NULL) {
+
+                if (flag) {
+                    total_distance += tail_S->StationInfo.distance_to_before;
+                    total_time += tail_S->StationInfo.time_to_arrive;
+                    total_time += tail_S->StationInfo.time_to_stay;
+                }
+
+                if (strcmp(tail_C->CarInfo.license_plate, CarInfo.license_plate) == 0) {
+
+                    count += 1;
+                    flag = 1;
+                    total_unload += CarInfo.goods_list.unload;
+                    max_upload = (max_upload > tail_C->CarInfo.goods_list.upload) ? max_upload : CarInfo.goods_list.upload;
+                    max_unload = (max_unload > tail_C->CarInfo.goods_list.unload) ? max_unload : CarInfo.goods_list.unload;
+
+                    sprintf(payload, "站点：");
+                    payload += sizeof(station);
+                    sprintf(payload, "%s\r\n", tail_S->StationInfo.name);
+                    payload += sizeof(tail_S->StationInfo.name) + 2;
+                    sprintf(payload, "载货：%.2f, 卸货%.2f\r\n\r\n", tail_C->CarInfo.goods_list.upload, tail_C->CarInfo.goods_list.unload);
+                    payload += sizeof(upload) + sizeof(tail_C->CarInfo.goods_list.upload) + 2;
+                    payload += sizeof(unload) + sizeof(tail_C->CarInfo.goods_list.unload) + 4;
+                }
+
+                if (flag) {
+                    flag = IsLast(tail_S->next, CarInfo);
+                }
+
+                tail_C = tail_C->next;
+            }
+            tail_S = tail_S->next;
+        }
+        tail_L = tail_L->next;
+    }
+
+    if (count != 0) {
+        sprintf(payload, "最大载货：%.2f, 最大卸货：%.2f\r\n", max_upload, max_unload);
+        payload += sizeof(maxupload) + sizeof(max_upload) + sizeof(maxunload) + sizeof(max_unload) + 4;
+        sprintf(payload, "平均卸货：%.2f\r\n", total_unload * 1.0 / count);
+        payload += sizeof(averageunload) + sizeof(total_unload * 1.0 / count) + 2;
+        sprintf(payload, "总路程：%.2f, 总耗时：%.2f\r\n\r\n", total_distance, total_time);
+    }
+
+}
 
 #endif // !__STATISTICS_
 #define __STATISTICS_

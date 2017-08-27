@@ -57,7 +57,7 @@ ul {
 	margin-left: 5px;
 	height: 260px;
 	width: 427px;
-	overflow-y: scroll;
+	overflow-y: auto;
 	padding-top: 10px;
 	padding-left: 10px;
 }

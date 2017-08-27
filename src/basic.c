@@ -79,6 +79,13 @@ void set_car_capacity(FirstNode *line, Car CarInfo) {
 // Insert a line in the linklist
 void ListInsert_F(Linklist *L, Line LineInfo) {
 
+    // initial line
+    LineInfo.stations = 0;
+    LineInfo.length = 0;
+    LineInfo.total_time = 0;
+    bzero(LineInfo.start_station, 10);
+    bzero(LineInfo.end_station, 10);
+
     // new linklist
     if (L->head == NULL) {
         L->head = (FirstNode*)malloc(sizeof(FirstNode));
@@ -104,6 +111,10 @@ void ListInsert_S(Linklist *L, Station StationInfo) {
     // error code
     char error_info1[] = "You should enter lines before!";
     char error_info2[] = "The line this station lie in is not exist!";
+
+    // initial station
+    StationInfo.No = 0;
+    StationInfo.distance_to_before = 0;
 
     // if line do not exist
     if (L->head == NULL) {
@@ -180,6 +191,9 @@ void ListInsert_T(Linklist *L, Car CarInfo) {
     char error_info2[] = "You should enter stations before!";
     char error_info3[] = "The line this car stay in is not exist!";
     char error_info4[] = "The station this car stay in is not exist!";
+
+    // initial car
+    CarInfo.goods_list.available_capacity = 0;
 
     // if line do not exist
     if (L->head  == NULL) {

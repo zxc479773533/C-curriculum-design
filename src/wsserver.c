@@ -342,11 +342,11 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.name, line, 20);
         pos = Readline(payload, pos, line);
-        strncpy(LineInfo.principal_name, line, 8);
+        strncpy(LineInfo.principal_name, line, 20);
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.principal_tel, line, 8);
         pos = Readline(payload, pos, line);
-        strncpy(LineInfo.principal_mobile, line, 11);
+        strncpy(LineInfo.principal_mobile, line, 12);
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.principal_email, line, 50);
 
@@ -393,9 +393,9 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(CarInfo.station_number, line, 10);
         pos = Readline(payload, pos, line);
-        strncpy(CarInfo.driver_name, line, 8);
+        strncpy(CarInfo.driver_name, line, 20);
         pos = Readline(payload, pos, line);
-        strncpy(CarInfo.driver_mobile, line, 11);
+        strncpy(CarInfo.driver_mobile, line, 12);
         pos = Readline(payload, pos, line);
         CarInfo.goods_list.total_capacity = atof(line);
         pos = Readline(payload, pos, line);
@@ -422,11 +422,11 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.name, line, 20);
         pos = Readline(payload, pos, line);
-        strncpy(LineInfo.principal_name, line, 8);
+        strncpy(LineInfo.principal_name, line, 20);
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.principal_tel, line, 8);
         pos = Readline(payload, pos, line);
-        strncpy(LineInfo.principal_mobile, line, 11);
+        strncpy(LineInfo.principal_mobile, line, 12);
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.principal_email, line, 50);
 
@@ -482,9 +482,9 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(CarInfo.station_number, line, 10);
         pos = Readline(payload, pos, line);
-        strncpy(CarInfo.driver_name, line, 8);
+        strncpy(CarInfo.driver_name, line, 20);
         pos = Readline(payload, pos, line);
-        strncpy(CarInfo.driver_mobile, line, 11);
+        strncpy(CarInfo.driver_mobile, line, 12);
         pos = Readline(payload, pos, line);
         if (strcmp(line, "#") == 0)
             CarInfo.goods_list.total_capacity = -1;
@@ -631,11 +631,26 @@ void Backstage_Main(char *payload, int payload_length) {
             printf("Error: %s\n", L.error);
         }
     }
-/*
+
     else if (strncmp(line, "Statistics", 10) == 0) {
 
+        Car CarInfo;
+        pos = Readline(payload, pos, line);
+        strncpy(CarInfo.license_plate, line, 8);
+
+        bzero(payload, payload_length);
+        Calculate(&L, CarInfo, payload);
+
+        if (strlen(payload) != 0) {
+            printf("Send results to client:\n");
+            //printf("%s\n", payload); 
+        }
+        else {
+            strcpy(payload, "没有找到这辆车。\n");
+            printf("Error: No such car!");
+        }
     }
-*/
+
     else if (strncmp(line, "SearchLine", 10) == 0) {
 
         Line LineInfo;
@@ -644,11 +659,11 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.name, line, 20);
         pos = Readline(payload, pos, line);
-        strncpy(LineInfo.principal_name, line, 8);
+        strncpy(LineInfo.principal_name, line, 20);
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.principal_tel, line, 8);
         pos = Readline(payload, pos, line);
-        strncpy(LineInfo.principal_mobile, line, 11);
+        strncpy(LineInfo.principal_mobile, line, 12);
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.principal_email, line, 50);
 
@@ -657,7 +672,7 @@ void Backstage_Main(char *payload, int payload_length) {
 
         if (strlen(payload) != 0) {
             printf("Send search results to client:\n");
-            printf("%s\n", payload);
+            //printf("%s\n", payload);
         }
         else {
             strcpy(payload, "没有找到符合要求的结果。\n");
@@ -695,7 +710,7 @@ void Backstage_Main(char *payload, int payload_length) {
 
         if (strlen(payload) != 0) {
             printf("Send search results to client:\n");
-            printf("%s\n", payload);
+            //printf("%s\n", payload);
         }
         else {
             strcpy(payload, "没有找到符合要求的结果。\n");
@@ -713,9 +728,9 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(CarInfo.station_number, line, 10);
         pos = Readline(payload, pos, line);
-        strncpy(CarInfo.driver_name, line, 8);
+        strncpy(CarInfo.driver_name, line, 20);
         pos = Readline(payload, pos, line);
-        strncpy(CarInfo.driver_mobile, line, 11);
+        strncpy(CarInfo.driver_mobile, line, 12);
         pos = Readline(payload, pos, line);
         if (strcmp(line, "#") == 0)
             CarInfo.goods_list.total_capacity = -1;
@@ -732,7 +747,7 @@ void Backstage_Main(char *payload, int payload_length) {
 
         if (strlen(payload) != 0) {
             printf("Send search results to client:\n");
-            printf("%s\n", payload);
+            //printf("%s\n", payload);
         }
         else {
             strcpy(payload, "没有找到符合要求的结果。\n");

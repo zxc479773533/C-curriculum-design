@@ -104,8 +104,9 @@ void SearchLines(Linklist *L, Line LineInfo, char *payload) {
         if (LineCmp(tail_L->LineInfo, LineInfo) == 0) {
             sprintf(payload, "编号：");
             payload += sizeof(number);
-            sprintf(payload, "%s\r\n", tail_L->LineInfo.number);
+            sprintf(payload, "%s, %s\r\n\r\n", tail_L->LineInfo.number, tail_L->LineInfo.name);
             payload += sizeof(tail_L->LineInfo.number) + 2;
+            payload += sizeof(tail_L->LineInfo.name) + 4;
         }
         tail_L = tail_L->next;
     }
@@ -130,8 +131,9 @@ void SearchStations(Linklist *L, Station StationInfo, char *payload) {
                 payload += sizeof(tail_L->LineInfo.number) + 2;
                 sprintf(payload, "编号：");
                 payload += sizeof(number);
-                sprintf(payload, "%s\r\n\r\n", tail_S->StationInfo.number);
-                payload += sizeof(tail_S->StationInfo.number) + 4;
+                sprintf(payload, "%s, %s\r\n\r\n", tail_S->StationInfo.number, tail_S->StationInfo.name);
+                payload += sizeof(tail_S->StationInfo.number) + 2;
+                payload += sizeof(tail_S->StationInfo.name) + 4;
             }
             tail_S = tail_S->next;
         }
@@ -144,7 +146,7 @@ void SearchCars(Linklist *L, Car CarInfo, char *payload) {
 
     char line[] = "路线：";
     char station[] = "站点：";
-    char license[] = "车牌号";
+    char license[] = "车牌号:";
     FirstNode *tail_L = L->head;
 
     while (tail_L != NULL) {
@@ -162,7 +164,7 @@ void SearchCars(Linklist *L, Car CarInfo, char *payload) {
                     payload += sizeof(station);
                     sprintf(payload, "%s\r\n", tail_S->StationInfo.number);
                     payload += sizeof(tail_S->StationInfo.number) + 2;
-                    sprintf(payload, "车牌号");
+                    sprintf(payload, "车牌号:");
                     payload += sizeof(license);
                     sprintf(payload, "%s\r\n\r\n", tail_C->CarInfo.license_plate);
                     payload += sizeof(tail_C->CarInfo.license_plate) + 4;

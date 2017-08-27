@@ -29,9 +29,9 @@ typedef struct {
     char start_station[10];
     char end_station[10];
     // about principle
-    char principal_name[8];
+    char principal_name[20];
     char principal_tel[8];
-    char principal_mobile[11];
+    char principal_mobile[12];
     char principal_email[50];
 } Line;
 
@@ -62,8 +62,8 @@ typedef struct {
     char license_plate[8];
     char line_number[6];
     char station_number[10];
-    char driver_name[8];
-    char driver_mobile[11];
+    char driver_name[20];
+    char driver_mobile[12];
     // goods information
     GoodsInfo goods_list;
 } Car;
@@ -238,6 +238,15 @@ extern void GetCarInfo(Linklist *L, Car CarInfo, char *payload);
 * Parameter: Linklist *L, Car CarInfo, char *payload
 * Return: None
 * Use: Get all information of a car
+*/
+
+extern void Calculate(Linklist *L, Car CarInfo, char *payload);
+/*
+* Function Name: Calculate
+* Module: Statistics
+* Parameter: Linklist L, Car CarInfo, char *payload
+* Return: None
+* Use: statistical calculation
 */
 
 extern void SearchLines(Linklist *L, Line LineInfo, char *payload);
