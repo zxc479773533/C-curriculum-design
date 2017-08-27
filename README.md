@@ -68,7 +68,7 @@ If the socket was closed by some error, both wsserver and GUI should be restart.
 
 ## Other commonts
 
-This project is homework of HUST-CS, for reference only. I do not with anyone to copy it totally.
+This project is homework of HUST-CS, for reference only. I do not wish anyone to copy it totally.
 
 Copyright (C) 2017, Pan Yue, zxc479773533@github.com
 
