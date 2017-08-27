@@ -1,0 +1,6 @@
+/home/panyue/code/my_github/C-curriculum-design/src/CMakeFiles/rebuild_cache.dir
+/home/panyue/code/my_github/C-curriculum-design/src/CMakeFiles/wsserver.dir
+/home/panyue/code/my_github/C-curriculum-design/src/CMakeFiles/statistics.dir
+/home/panyue/code/my_github/C-curriculum-design/src/CMakeFiles/edit_cache.dir
+/home/panyue/code/my_github/C-curriculum-design/src/CMakeFiles/basic.dir
+/home/panyue/code/my_github/C-curriculum-design/src/CMakeFiles/search.dir

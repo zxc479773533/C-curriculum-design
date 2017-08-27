@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/wsserver.dir/wsserver.c.o  -o wsserver  -L/home/panyue/code/my_github/C-curriculum-design/src libbasic.a libsearch.a libstatistics.a -lcrypto 

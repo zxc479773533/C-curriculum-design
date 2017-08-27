@@ -1,0 +1,2 @@
+/usr/bin/ar qc libbasic.a  CMakeFiles/basic.dir/basic.c.o
+/usr/bin/ranlib libbasic.a

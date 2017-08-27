@@ -54,3 +54,7 @@ dkms.conf
 # My Configurations:
 /.vscode/
 /build/
+/CMakeFiles/
+/CMakeScripts/
+CMakeCache.txt
+cmake_install.cmake
