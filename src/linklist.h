@@ -240,5 +240,32 @@ extern void GetCarInfo(Linklist *L, Car CarInfo, char *payload);
 * Use: Get all information of a car
 */
 
+extern void SearchLines(Linklist *L, Line LineInfo, char *payload);
+/*
+* Function Name: SearchLines
+* Module: Search
+* Parameter: Linklist *L, Line LineInfo, char *payload
+* Return: None
+* Use: search lines
+*/
+
+extern void SearchStations(Linklist *L, Station StationInfo, char *payload);
+/*
+* Function Name: SearchStations
+* Module: Search
+* Parameter: Linklist *L, Station StationInfo, char *payload
+* Return: None
+* Use: search stations
+*/
+
+extern void SearchCars(Linklist *L, Car CarInfo, char *payload);
+/*
+* Function Name: SearchCars
+* Module: Search
+* Parameter: Linklist *L, Car CarInfo, char *payload
+* Return: None
+* Use: search cars
+*/
+
 
 #endif // !__LINKLIST_H_

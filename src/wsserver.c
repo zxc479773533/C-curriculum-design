@@ -348,7 +348,7 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(LineInfo.principal_mobile, line, 11);
         pos = Readline(payload, pos, line);
-        strncpy(LineInfo.principal_email, line, 50);        
+        strncpy(LineInfo.principal_email, line, 50);
 
         ListInsert_F(&L, LineInfo);
 
@@ -500,6 +500,7 @@ void Backstage_Main(char *payload, int payload_length) {
             CarInfo.goods_list.upload = -1;
         else
             CarInfo.goods_list.upload = atof(line);
+
         ModifyCar(&L, CarInfo);
 
         bzero(payload, payload_length);
@@ -623,7 +624,7 @@ void Backstage_Main(char *payload, int payload_length) {
 
         if (strlen(L.error) == 0) {
             printf("Send car information to client:\n");
-            printf("Error: %s\n", payload);
+            printf("%s\n", payload);
         }
         else {
             strcpy(payload, "该车辆并不存在！\n");
@@ -634,19 +635,111 @@ void Backstage_Main(char *payload, int payload_length) {
     else if (strncmp(line, "Statistics", 10) == 0) {
 
     }
-
+*/
     else if (strncmp(line, "SearchLine", 10) == 0) {
 
+        Line LineInfo;
+        pos = Readline(payload, pos, line);
+        strncpy(LineInfo.number, line, 6);
+        pos = Readline(payload, pos, line);
+        strncpy(LineInfo.name, line, 20);
+        pos = Readline(payload, pos, line);
+        strncpy(LineInfo.principal_name, line, 8);
+        pos = Readline(payload, pos, line);
+        strncpy(LineInfo.principal_tel, line, 8);
+        pos = Readline(payload, pos, line);
+        strncpy(LineInfo.principal_mobile, line, 11);
+        pos = Readline(payload, pos, line);
+        strncpy(LineInfo.principal_email, line, 50);
+
+        bzero(payload, payload_length);
+        SearchLines(&L, LineInfo, payload);
+
+        if (strlen(payload) != 0) {
+            printf("Send search results to client:\n");
+            printf("%s\n", payload);
+        }
+        else {
+            strcpy(payload, "没有找到符合要求的结果。\n");
+            printf("Error: No such line!");
+        }
     }
 
     else if (strncmp(line, "SearchStation", 10) == 0) {
 
+        Station StationInfo;
+        pos = Readline(payload, pos, line);
+        strncpy(StationInfo.line_number, line, 6);
+        pos = Readline(payload, pos, line);
+        strncpy(StationInfo.number, line, 10);
+        pos = Readline(payload, pos, line);
+        strncpy(StationInfo.name, line, 10);
+        pos = Readline(payload, pos, line);
+        if (strcmp(line, "#") == 0)
+            StationInfo.distance = -1;
+        else
+            StationInfo.distance = atof(line);        
+        pos = Readline(payload, pos, line);
+        if (strcmp(line, "#") == 0)
+            StationInfo.time_to_arrive = -1;
+        else
+            StationInfo.time_to_arrive = atof(line);
+        pos = Readline(payload, pos, line);
+        if (strcmp(line, "#") == 0)
+            StationInfo.time_to_stay = -1;
+        else
+            StationInfo.time_to_stay = atof(line);
+
+        bzero(payload, payload_length);
+        SearchStations(&L, StationInfo, payload);
+
+        if (strlen(payload) != 0) {
+            printf("Send search results to client:\n");
+            printf("%s\n", payload);
+        }
+        else {
+            strcpy(payload, "没有找到符合要求的结果。\n");
+            printf("Error: No such station!");
+        }
     }
 
     else if (strncmp(line, "SearchCar", 9) == 0) {
 
+        Car CarInfo;
+        pos = Readline(payload, pos, line);
+        strncpy(CarInfo.license_plate, line, 8);
+        pos = Readline(payload, pos, line);
+        strncpy(CarInfo.line_number, line, 6);
+        pos = Readline(payload, pos, line);
+        strncpy(CarInfo.station_number, line, 10);
+        pos = Readline(payload, pos, line);
+        strncpy(CarInfo.driver_name, line, 8);
+        pos = Readline(payload, pos, line);
+        strncpy(CarInfo.driver_mobile, line, 11);
+        pos = Readline(payload, pos, line);
+        if (strcmp(line, "#") == 0)
+            CarInfo.goods_list.total_capacity = -1;
+        else
+            CarInfo.goods_list.total_capacity = atof(line);
+        pos = Readline(payload, pos, line);
+        if (strcmp(line, "#") == 0)
+            CarInfo.goods_list.available_capacity =  -1;
+        else
+            CarInfo.goods_list.available_capacity = atof(line);
+
+        bzero(payload, payload_length);
+        SearchCars(&L, CarInfo, payload);
+
+        if (strlen(payload) != 0) {
+            printf("Send search results to client:\n");
+            printf("%s\n", payload);
+        }
+        else {
+            strcpy(payload, "没有找到符合要求的结果。\n");
+            printf("Error: No such car!");
+        }
     }
-*/
+
     SaveData(&L);
 }
 
