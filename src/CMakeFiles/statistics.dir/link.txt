@@ -1,2 +1,0 @@
-/usr/bin/ar qc libstatistics.a  CMakeFiles/statistics.dir/statistics.c.o
-/usr/bin/ranlib libstatistics.a
