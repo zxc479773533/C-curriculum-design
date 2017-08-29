@@ -37,7 +37,8 @@ function mainReceive (data) {
     data += '<br/>'
     /*TO BE WRITE*/
 
-    document.getElementById('console').innerHTML += data;
+    document.getElementById('console_content').innerHTML += data;
+    document.getElementById('console_end').scrollIntoView();;
 }
 
 // send request to server
