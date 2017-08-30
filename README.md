@@ -23,6 +23,7 @@ Dependencies: openssl
 ```shell
 cd bin
 sh ./install.sh
+sudo ./wsserver
 [Your Internet browser] index.html
 ```
 
