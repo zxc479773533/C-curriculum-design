@@ -364,7 +364,7 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(StationInfo.number, line, 10);
         pos = Readline(payload, pos, line);
-        strncpy(StationInfo.name, line, 10);
+        strncpy(StationInfo.name, line, 20);
         pos = Readline(payload, pos, line);
         StationInfo.distance = atof(line);     
         pos = Readline(payload, pos, line);
@@ -449,7 +449,7 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(StationInfo.number, line, 10);
         pos = Readline(payload, pos, line);
-        strncpy(StationInfo.name, line, 10);
+        strncpy(StationInfo.name, line, 20);
         pos = Readline(payload, pos, line);
         if (strcmp(line, "#") == 0)
             StationInfo.time_to_arrive = -1;
@@ -688,12 +688,12 @@ void Backstage_Main(char *payload, int payload_length) {
         pos = Readline(payload, pos, line);
         strncpy(StationInfo.number, line, 10);
         pos = Readline(payload, pos, line);
-        strncpy(StationInfo.name, line, 10);
+        strncpy(StationInfo.name, line, 20);
         pos = Readline(payload, pos, line);
         if (strcmp(line, "#") == 0)
             StationInfo.distance = -1;
         else
-            StationInfo.distance = atof(line);        
+            StationInfo.distance = atof(line);
         pos = Readline(payload, pos, line);
         if (strcmp(line, "#") == 0)
             StationInfo.time_to_arrive = -1;

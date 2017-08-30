@@ -40,7 +40,7 @@ typedef struct {
     // initial
     char line_number[6];
     int No;
-    char number[10];
+    char number[20];
     char name[10];
     float distance; //kilometers
     float distance_to_before; //kilometers
