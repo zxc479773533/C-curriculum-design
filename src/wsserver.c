@@ -492,7 +492,7 @@ void Backstage_Main(char *payload, int payload_length) {
             CarInfo.goods_list.total_capacity = atof(line);
         pos = Readline(payload, pos, line);
         if (strcmp(line, "#") == 0)
-            CarInfo.goods_list.unload =  -1;
+            CarInfo.goods_list.unload = -1;
         else
             CarInfo.goods_list.unload = atof(line);
         pos = Readline(payload, pos, line);

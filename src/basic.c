@@ -25,7 +25,7 @@ void set_No_and_time(FirstNode *line) {
     SecondNode *station = line->first_child, *pre = line->first_child;
 
     // settle first station
-    strcpy(line->LineInfo.start_station, station->StationInfo.number);
+    strcpy(line->LineInfo.start_station, station->StationInfo.name);
     station->StationInfo.No = count;
     station->StationInfo.distance_to_before = 0;
     total_time += station->StationInfo.time_to_arrive;
@@ -44,7 +44,7 @@ void set_No_and_time(FirstNode *line) {
         count++;
     }
 
-    strcpy(line->LineInfo.end_station, pre->StationInfo.number);
+    strcpy(line->LineInfo.end_station, pre->StationInfo.name);
     line->LineInfo.stations = count - 1;
     line->LineInfo.total_time = total_time;
     line->LineInfo.length = pre->StationInfo.distance;
@@ -54,7 +54,7 @@ void set_No_and_time(FirstNode *line) {
 void set_car_capacity(FirstNode *line, Car CarInfo) {
 
     //definations
-    float available_caoacity = CarInfo.goods_list.total_capacity;
+    float available_capacity = 0;
     SecondNode *station = line->first_child;
 
     //traversal stations
@@ -67,9 +67,9 @@ void set_car_capacity(FirstNode *line, Car CarInfo) {
 
         // calculate
         if (car != NULL) {
-            available_caoacity += car->CarInfo.goods_list.unload;
-            available_caoacity -= car->CarInfo.goods_list.upload;
-            car->CarInfo.goods_list.available_capacity = available_caoacity;
+            available_capacity += car->CarInfo.goods_list.unload;
+            available_capacity -= car->CarInfo.goods_list.upload;
+            car->CarInfo.goods_list.available_capacity = available_capacity;
         }
         station = station->next;
     }
@@ -385,7 +385,7 @@ void ModifyCar(Linklist *L, Car CarInfo) {
     char error_info1[] = "This car is not exist!";
 
     FirstNode *tail_L = L->head;
-    while (strcmp(tail_L->LineInfo.number, CarInfo.line_number) != 0 && tail_L != NULL)
+    while ( tail_L != NULL && strcmp(tail_L->LineInfo.number, CarInfo.line_number) != 0)
         tail_L = tail_L->next;
 
     if (tail_L == NULL)
@@ -395,7 +395,7 @@ void ModifyCar(Linklist *L, Car CarInfo) {
     else {
 
         SecondNode *tail_S = tail_L->first_child;
-        while (strcmp(tail_S->StationInfo.number, CarInfo.station_number) != 0 && tail_S != NULL)
+        while (tail_S != NULL && strcmp(tail_S->StationInfo.number, CarInfo.station_number) != 0)
             tail_S = tail_S->next;
 
         if (tail_S == NULL)
@@ -405,7 +405,7 @@ void ModifyCar(Linklist *L, Car CarInfo) {
         else {
 
             ThirdNode *tail_C = tail_S->first_child;
-            while (strcmp(tail_C->CarInfo.license_plate, CarInfo.license_plate) != 0 && tail_C != NULL)
+            while (tail_C != NULL && strcmp(tail_C->CarInfo.license_plate, CarInfo.license_plate) != 0)
                 tail_C = tail_C->next;
 
             if (tail_C == NULL)

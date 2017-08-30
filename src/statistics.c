@@ -10,6 +10,11 @@
 
 #include "linklist.h"
 
+// get max of a, b
+float Max(float a, float b) {
+    return (a > b) ? a : b;
+}
+
 // Get all information of a line
 void GetLineInfo(Linklist *L, Line LineInfo, char *payload) {
 
@@ -29,8 +34,8 @@ void GetLineInfo(Linklist *L, Line LineInfo, char *payload) {
             "总站点数：%d\r\n" \
             "总长度：%.2f千米\r\n" \
             "总时间：%.2f分钟\r\n" \
-            "起始站编号：%s\r\n" \
-            "终点站编号：%s\r\n" \
+            "起始站：%s\r\n" \
+            "终点站：%s\r\n" \
             "负责人姓名：%s\r\n" \
             "负责人办公室电话：%s\r\n" \
             "负责人移动电话：%s\r\n" \
@@ -184,9 +189,9 @@ void Calculate(Linklist *L, Car CarInfo, char *payload) {
 
                     count += 1;
                     flag = 1;
-                    total_unload += CarInfo.goods_list.unload;
-                    max_upload = (max_upload > tail_C->CarInfo.goods_list.upload) ? max_upload : CarInfo.goods_list.upload;
-                    max_unload = (max_unload > tail_C->CarInfo.goods_list.unload) ? max_unload : CarInfo.goods_list.unload;
+                    total_unload += tail_C->CarInfo.goods_list.unload;
+                    max_upload = Max(max_upload, tail_C->CarInfo.goods_list.upload);
+                    max_unload = Max(max_unload, tail_C->CarInfo.goods_list.unload);
 
                     sprintf(payload, "站点：");
                     payload += sizeof(station);
@@ -209,8 +214,8 @@ void Calculate(Linklist *L, Car CarInfo, char *payload) {
     }
 
     if (count != 0) {
-        sprintf(payload, "最大载货：%.2f, 最大卸货：%.2f\r\n", max_upload, max_unload);
-        payload += sizeof(maxupload) + sizeof(max_upload) + sizeof(maxunload) + sizeof(max_unload) + 4;
+        sprintf(payload, "最大载货：%.2f, 最大卸货：%.2f\r\n\r\n", max_upload, max_unload);
+        payload += sizeof(maxupload) + sizeof(max_upload) + sizeof(maxunload) + sizeof(max_unload) + 6;
         sprintf(payload, "平均卸货：%.2f\r\n", total_unload * 1.0 / count);
         payload += sizeof(averageunload) + sizeof(total_unload * 1.0 / count) + 2;
         sprintf(payload, "总路程：%.2f, 总耗时：%.2f\r\n\r\n", total_distance, total_time);
