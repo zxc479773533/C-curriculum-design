@@ -54,7 +54,7 @@ void set_No_and_time(FirstNode *line) {
 void set_car_capacity(FirstNode *line, Car CarInfo) {
 
     //definations
-    float available_capacity = 0;
+    float available_capacity = CarInfo.goods_list.total_capacity;
     SecondNode *station = line->first_child;
 
     //traversal stations

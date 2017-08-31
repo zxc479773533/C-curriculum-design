@@ -10,9 +10,16 @@
 
 #include "linklist.h"
 
+#define INFINITE 9999999999
+
 // get max of a, b
 float Max(float a, float b) {
     return (a > b) ? a : b;
+}
+
+// get min of a, b
+float Min(float a, float b) {
+    return (a < b) ? a : b;
 }
 
 // Get all information of a line
@@ -124,6 +131,90 @@ void GetCarInfo(Linklist *L, Car CarInfo, char *payload) {
             Car->CarInfo.goods_list.upload,
             Car->CarInfo.goods_list.available_capacity
         );
+    }
+
+}
+
+// get max and min time, length information of lines
+void MaxAndMin(Linklist *L, char *payload) {
+
+    // error code
+    char error_info1[] = "No lines exist!";
+
+    if (L->head == NULL)
+        strcpy(L->error, error_info1);
+
+    else {
+
+        float max_time = 0, max_length = 0;
+        float min_time = INFINITE, min_length = INFINITE;
+
+        // find the max and min
+        FirstNode *tail_L = L->head;
+        while (tail_L != NULL) {
+            max_length = Max(max_length, tail_L->LineInfo.length);
+            max_time = Max(max_time, tail_L->LineInfo.total_time);
+            min_length = Min(min_length, tail_L->LineInfo.length);
+            min_time = Min(min_time, tail_L->LineInfo.total_time);
+            tail_L = tail_L->next;
+        }
+
+        // build the response
+        tail_L = L->head;
+        char maxlen[] = "最长路线长度：";
+        sprintf(payload, "最长路线长度：%.2f\r\n\r\n", max_length);
+        payload += sizeof(maxlen) + sizeof(max_length) + 4;
+        while (tail_L != NULL) {
+            if (tail_L->LineInfo.length == max_length) {
+                sprintf(payload, "%s ", tail_L->LineInfo.name);
+                payload += sizeof(tail_L->LineInfo.name) + 1;
+            }
+            tail_L = tail_L->next;
+        }
+        sprintf(payload, "\r\n\r\n");
+        payload += 4;
+
+        tail_L = L->head;
+        char minlen[] = "最短路线长度：";
+        sprintf(payload, "最短路线长度：%.2f\r\n\r\n", min_length);
+        payload += sizeof(minlen) + sizeof(min_length) + 4;
+        while (tail_L != NULL) {
+            if (tail_L->LineInfo.length == min_length) {
+                sprintf(payload, "%s ", tail_L->LineInfo.name);
+                payload += sizeof(tail_L->LineInfo.name) + 1;
+            }
+            tail_L = tail_L->next;
+        }
+        sprintf(payload, "\r\n\r\n");
+        payload += 4;
+
+        tail_L = L->head;
+        char maxt[] = "最长路线时间：";
+        sprintf(payload, "最长路线时间：%.2f\r\n\r\n", max_time);
+        payload += sizeof(maxt) + sizeof(max_time) + 4;
+        while (tail_L != NULL) {
+            if (tail_L->LineInfo.total_time == max_time) {
+                sprintf(payload, "%s ", tail_L->LineInfo.name);
+                payload += sizeof(tail_L->LineInfo.name) + 1;
+            }
+            tail_L = tail_L->next;
+        }
+        sprintf(payload, "\r\n\r\n");
+        payload += 4;
+
+        tail_L = L->head;
+        char mint[] = "最短路线时间：";
+        sprintf(payload, "最短路线时间：%.2f\r\n\r\n", min_time);
+        payload += sizeof(mint) + sizeof(min_time) + 4;
+        while (tail_L != NULL) {
+            if (tail_L->LineInfo.total_time == min_time) {
+                sprintf(payload, "%s ", tail_L->LineInfo.name);
+                payload += sizeof(tail_L->LineInfo.name) + 1;
+            }
+            tail_L = tail_L->next;
+        }
+        sprintf(payload, "\r\n\r\n");
+        payload += 4;
     }
 
 }

@@ -632,6 +632,22 @@ void Backstage_Main(char *payload, int payload_length) {
         }
     }
 
+    else if (strncmp(line, "MaxAndMin", 9) == 0) {
+
+        bzero(payload, payload_length);
+        MaxAndMin(&L, payload);
+
+        if (strlen(L.error)  == 0) {
+            printf("Send results to client\n");
+            //printf("%s\n", payload); 
+        }
+        else {
+            strcpy(payload, "没有任何路线！\n");
+            printf("Error:%s\n", L.error);
+        }
+
+    }
+
     else if (strncmp(line, "Statistics", 10) == 0) {
 
         Car CarInfo;
@@ -642,7 +658,7 @@ void Backstage_Main(char *payload, int payload_length) {
         Calculate(&L, CarInfo, payload);
 
         if (strlen(payload) != 0) {
-            printf("Send results to client:\n");
+            printf("Send results to client\n");
             //printf("%s\n", payload); 
         }
         else {

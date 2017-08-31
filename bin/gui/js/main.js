@@ -309,3 +309,12 @@ function makeMainButton() {
     HTML += '</li></ul>';
     return HTML;
 }
+
+// create max and min page
+function makeMaxAndMin() {
+    var HTML = '<br/><br/><br/>';
+    HTML += '<ul><li><h3>点击查看路线的极值情况</h3></li>';
+    HTML += '<li><input id="submit" type="submit" value="提交" onclick="ws.send(\'MaxAndMin\')"/>';
+    HTML += '</li></ul>';
+    return HTML;
+}

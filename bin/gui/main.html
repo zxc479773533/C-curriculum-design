@@ -36,8 +36,8 @@
 					if (val == 'Main') {
 						document.getElementById('mainForm').innerHTML = makeMainButton();
 					}
-					else if (val == 'Inquire') {
-						document.getElementById('mainForm').innerHTML = makeInquirePage();
+					else if (val == 'MaxAndMin') {
+						document.getElementById('mainForm').innerHTML = makeMaxAndMin();
 					}
 					else {
 						document.getElementById('mainForm').innerHTML = makeFormHTML(val);						
@@ -58,6 +58,7 @@
 				<option value="GetLine">查询配送路线详细信息</option>
 				<option value="GetStation">查询站点详细信息</option>
 				<option value="GetCar">查询车辆详细信息</option>				
+				<option value="MaxAndMin">极值查询</option>
 				<option value="Statistics">统计计算</option>
 				<option value="SearchLine">模糊搜索配送路线</option>
 				<option value="SearchStation">模糊搜索站点</option>

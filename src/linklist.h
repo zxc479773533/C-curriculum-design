@@ -40,8 +40,8 @@ typedef struct {
     // initial
     char line_number[6];
     int No;
-    char number[20];
-    char name[10];
+    char number[10];
+    char name[20];
     float distance; //kilometers
     float distance_to_before; //kilometers
     float time_to_arrive; //minutes
@@ -238,6 +238,15 @@ extern void GetCarInfo(Linklist *L, Car CarInfo, char *payload);
 * Parameter: Linklist *L, Car CarInfo, char *payload
 * Return: None
 * Use: Get all information of a car
+*/
+
+extern void MaxAndMin(Linklist *L, char *payload);
+/*
+* Function Name: MaxAndMin
+* Module: Statistics
+* Parameter: Linklist *L, char *payload
+* Return: None
+* Use: get max and min time, length information of lines
 */
 
 extern void Calculate(Linklist *L, Car CarInfo, char *payload);
