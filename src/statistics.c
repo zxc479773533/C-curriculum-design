@@ -315,4 +315,3 @@ void Calculate(Linklist *L, Car CarInfo, char *payload) {
 }
 
 #endif // !__STATISTICS_
-#define __STATISTICS_
